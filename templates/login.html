@@ -1,0 +1,36 @@
+{% extends 'plantilla.html' %}
+{% load static %}
+{% block content %}
+{% if messages %}
+{% for message in messages %}
+<script>
+    Swal.fire({
+        title: "Error",
+        text: "{{ message }}",
+        icon: "error"
+    });
+</script>
+{% endfor %}
+{% endif %}
+<div class="container-form">
+    <div class="row ">
+        <div class="col-md-5">
+            <div class="image-container d-flex justify-content-center align-items-center"></div>
+        </div>
+        <div class="col-md-7 d-flex justify-content-center align-items-center ">
+            <form method="post" class="fom-login p-4  rounded">
+                <h2 class="text-center">Ingresar</h2>
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="form-group">
+                    <label ffor="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+                {% endfor %}
+                <br>
+                <button type="submit" class="btn-primary btn-block w-100 boton">Enviar</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
