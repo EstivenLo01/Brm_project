@@ -13,3 +13,22 @@ class Form_login(forms.ModelForm):
     class Meta:
         model = models.User
         fields = ['email','document_user']
+
+
+from django.db import models
+
+class Empleado(models.Model):
+    id_empleado = models.AutoField(primary_key=True)
+    cedula = models.BigIntegerField(unique=True)
+    nombres = models.CharField(max_length=100)
+    apellidos = models.CharField(max_length=100)
+    correo = models.EmailField(unique=True)
+    telefono_movil = models.CharField(max_length=15, blank=True, null=True)
+    telefono_fijo = models.CharField(max_length=15, blank=True, null=True)
+    campaña = models.CharField(max_length=100)
+    direccion = models.CharField(max_length=200)
+    habilitado = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.nombres} {self.apellidos}"
+
