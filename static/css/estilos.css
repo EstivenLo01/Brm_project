@@ -91,3 +91,9 @@
     font-size: 0.8rem;
     color: #888;
 }
+
+/* ********************************************* home ********************************************************* */
+.navbar{margin-bottom: 30px;}
+.texto{width: 100%;height: 10vh;text-align: center;margin-bottom: 30px;}
+.contenedor_options{width: 70%;height: 70vh;display: grid; grid-template-columns: repeat(3, 1fr);gap: 20px;margin: 0 auto;margin-bottom: 30px;}
+.contenedor_options .card{width: 100%;height: 100%;background-color: var(--azul);border-radius: 10px;display: flex;justify-content: center;align-items: center;}

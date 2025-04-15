@@ -2,27 +2,28 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
+from . import models
 
-def login_view(request):
-    if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
-            login(request, user)
-            return redirect("home")  # Asegúrate de que 'home' esté en tus URLs
-
-        else:
-            messages.error(request, "Usuario o contraseña incorrectos")
-
-    return render(request, "login.html")
-
-def logout_view(request):
-    logout(request)
-    return redirect("login")  # Asegúrate de que 'login' esté en tus URLs
-
-@login_required  # Asegura que solo usuarios autenticados accedan
 def home(request):
-    return render(request, 'home.html')
+    usuario = request.session.get('NombreUsuario','NO')
+    if not request.session.get('is_authenticated'):
+        return redirect('/login/')
+    usuario = models.User.objects.get(name_user=usuario)
+    if usuario.idRol:
+        rol = usuario.idRol.name_rol
+        if rol == 'administrador':
+           print('administrador')
+           #backend para el superadmin
+           context = {'usuario': usuario, 'rol': rol}
+           return render(request, 'usuarios/home.html',{'usuario': usuario})
+        elif rol == 'digitador_actas':
+            print('digitador_actas')
+             #backend para quien digita las actas
+            context = {'usuario': usuario, 'rol': rol}
+            return render(request, 'usuarios/home.html',context)
+        elif rol == 'supervisor':
+            print('supervisor')
+             #backend para administrador
+        else:
+            messages.error(request, 'Rol no reconocido')
+            return render(request, 'usuarios/home.html',{'usuario': usuario})
