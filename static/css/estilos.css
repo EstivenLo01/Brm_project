@@ -91,3 +91,84 @@
     font-size: 0.8rem;
     color: #888;
 }
+
+/* ********************************************* home ********************************************************* */
+.navbar{margin-bottom: 30px;}
+.texto{width: 100%;height: 10vh;text-align: center;margin-bottom: 30px;}
+.contenedor_options{width: 70%;height: 70vh;display: grid; grid-template-columns: repeat(3, 1fr);gap: 20px;margin: 0 auto;margin-bottom: 30px;}
+.contenedor_options .card{width: 100%;height: 100%;background-color: var(--azul);border-radius: 10px;display: flex;justify-content: center;align-items: center;}
+
+/* iconos */
+#icono{
+    font-size: 60px;
+    color: white;
+    margin-bottom: 10px;
+}
+#letra_opcion{
+    text-decoration: none;
+    color: white;
+    font-size: 20px;
+}
+
+/*  registro usuario */
+.contenedor_reponsive{
+    width: 100%;
+    height: 90vh;
+    display: flex;justify-content: space-between;align-items: center;
+}
+.contenedor-tabla{
+    width: 50%;
+    height: 90%;
+    margin-left: 20px;
+    background-color: #111;
+}
+.contenedor-form {
+    width: 40%;
+    margin: 20px auto;
+    padding: 25px;
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.contenedor-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.contenedor-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #444;
+}
+
+.contenedor-form input[type="text"],
+.contenedor-form input[type="email"],
+.contenedor-form input[type="number"],
+.contenedor-form input[type="datetime-local"],
+.contenedor-form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.contenedor-form input[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.contenedor-form input[type="submit"]:hover {
+    background-color: #0056b3;
+}

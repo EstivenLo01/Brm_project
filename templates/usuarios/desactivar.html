@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desactivar</title>
+</head>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<body>
+    <script>
+        const usuario = "{{ usuario }}";  
+    
+        Swal.fire({
+            title: "¿Estás seguro?",
+            text: usuario + " perderá los permisos",  
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sí, eliminar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "¡Eliminado!",
+                    text: "Los permisos han sido revocados.",
+                    icon: "success"
+                });
+                location.href = "http://127.0.0.1:8000/user/RegistroUser/";
+            }
+        });
+    </script>
+    </script>
+</body>
+
+</html>

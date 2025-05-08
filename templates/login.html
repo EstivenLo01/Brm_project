@@ -1,29 +1,49 @@
 {% extends 'plantilla.html' %}
 {% load static %}
 {% block content %}
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Mostrar solo si viene ?logout=1 -->
+{% if request.GET.logout %}
+<script>
+Swal.fire({
+  icon: 'success',
+  title: '¡Sesión cerrada!',
+  text: 'Tu sesión ha finalizado correctamente',
+  confirmButtonText: 'OK'
+});
+</script>
+{% endif %}
+
+<!-- Errores de Django -->
 {% if messages %}
 {% for message in messages %}
 <script>
-    Swal.fire({
-        title: "Error",
-        text: "{{ message }}",
-        icon: "error"
-    });
+Swal.fire({
+    icon: '{{ message.tags }}',  // Esto puede ser 'error', 'warning', etc.
+    title: '{{ message.tags|capfirst }}',
+    text: '{{ message }}',
+    confirmButtonText: 'OK'
+});
 </script>
 {% endfor %}
 {% endif %}
+
+<!-- Formulario de login -->
 <div class="container-form">
-    <div class="row ">
+    <div class="row">
         <div class="col-md-5">
             <div class="image-container d-flex justify-content-center align-items-center"></div>
         </div>
-        <div class="col-md-7 d-flex justify-content-center align-items-center ">
-            <form method="post" class="fom-login p-4  rounded">
+        <div class="col-md-7 d-flex justify-content-center align-items-center">
+            <form method="post" class="fom-login p-4 rounded">
                 <h2 class="text-center">Ingresar</h2>
                 {% csrf_token %}
                 {% for field in form %}
                 <div class="form-group">
-                    <label ffor="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                     {{ field }}
                 </div>
                 {% endfor %}
@@ -33,4 +53,15 @@
         </div>
     </div>
 </div>
+
+<!-- Ocultar campo como contraseña -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let docInput = document.getElementById("id_document_user");
+        if (docInput) {
+            docInput.type = "password";
+        }
+    });
+</script>
+
 {% endblock %}

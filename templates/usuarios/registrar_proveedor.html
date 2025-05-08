@@ -1,0 +1,46 @@
+{% extends 'plantilla.html' %}
+{% block content %}
+
+<div class="container mt-5">
+    <h2>Registrar Proveedor</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.nombre_proveedor.label_tag }}
+            {{ form.nombre_proveedor }}
+        </div>
+        <div class="mb-3">
+            {{ form.estado.label_tag }}
+            {{ form.estado }}
+        </div>
+        <button type="submit" class="btn btn-success">Registrar</button>
+    </form>
+
+    <hr>
+
+    <h4>Proveedores Registrados</h4>
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for proveedor in proveedores %}
+            <tr>
+                <td>{{ proveedor.id_proveedor }}</td> <!-- Aquí aparece el ID autogenerado -->
+                <td>{{ proveedor.nombre_proveedor }}</td>
+                <td>{{ proveedor.estado }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">No hay proveedores registrados</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

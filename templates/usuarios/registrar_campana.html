@@ -1,0 +1,96 @@
+{% extends 'plantilla.html' %}
+
+{% block title %}
+<title>Registro de Campaña</title>
+{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">{{ usuario }}</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'usuarios:home' %}">Home</a>
+                </li>
+            </ul>
+            <span class="navbar-text">
+                {{ rol }}
+            </span>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h2 class="text-primary">Registrar Campaña</h2>
+    <form id="formCampana" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre de la campaña:</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Registrar</button>
+    </form>
+
+    <h3 class="mt-5 text-white bg-dark p-2">Campañas Registradas</h3>
+    <table class="table table-striped table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Nombre</th>
+                <th>Estado</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody id="tablaCampanas">
+            <!-- Se llenará con JavaScript -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.getElementById("formCampana").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const nombre = document.getElementById("nombre").value.trim();
+        if (!nombre) return;
+
+        const tabla = document.getElementById("tablaCampanas");
+        const fila = tabla.insertRow();
+
+        const celdaNombre = fila.insertCell(0);
+        celdaNombre.textContent = nombre;
+
+        const celdaEstado = fila.insertCell(1);
+        celdaEstado.textContent = "Habilitada";
+        celdaEstado.classList.add("text-success");
+
+        const celdaAccion = fila.insertCell(2);
+        const boton = document.createElement("button");
+        boton.className = "btn btn-sm btn-outline-secondary";
+        boton.textContent = "Deshabilitar";
+
+        boton.onclick = function() {
+            if (celdaEstado.textContent === "Habilitada") {
+                celdaEstado.textContent = "Deshabilitada";
+                celdaEstado.classList.remove("text-success");
+                celdaEstado.classList.add("text-danger");
+                boton.textContent = "Habilitar";
+            } else {
+                celdaEstado.textContent = "Habilitada";
+                celdaEstado.classList.remove("text-danger");
+                celdaEstado.classList.add("text-success");
+                boton.textContent = "Deshabilitar";
+            }
+        };
+
+        celdaAccion.appendChild(boton);
+        document.getElementById("formCampana").reset();
+    });
+</script>
+{% endblock %}
+
+
+
