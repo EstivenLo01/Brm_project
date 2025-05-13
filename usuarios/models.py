@@ -43,7 +43,7 @@ class User(models.Model):
 class Campana(models.Model):
     id_campana = models.AutoField(primary_key=True)
     nombre_campana = models.CharField(max_length=100)
-    estado = models.CharField(max_length=20, choices=[('Habilitado', 'Habilitado'), ('Inhabilitado', 'Inhabilitado')])
+    estado = models.ForeignKey(Estado, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.nombre_campana

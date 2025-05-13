@@ -78,10 +78,6 @@ class CampanaForm(forms.ModelForm):
     class Meta:
         model = Campana
         fields = ['nombre_campana', 'estado']
-        labels = {
-            'nombre_campana': 'Nombre de la Campaña',
-            'estado': 'Estado',
-        }
 
 
 class ProveedorForm(forms.ModelForm):

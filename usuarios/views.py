@@ -18,6 +18,7 @@ from usuarios.models import Estado
 
 
 
+
 def home(request):
     usuario = request.session.get('NombreUsuario','NO')
     if not request.session.get('is_authenticated'):
@@ -173,6 +174,8 @@ def desactivar(request, idUser):
         form = forms.desactivar(instance=desactivar)
     return render(request, 'usuarios/desactivar.html', context)
 
+
+
 def registrar_campana(request):
     if request.method == 'POST':
         form = CampanaForm(request.POST)
@@ -181,14 +184,12 @@ def registrar_campana(request):
             return redirect('usuarios:registrar_campana')
     else:
         form = CampanaForm()
-
+    
     campanas = Campana.objects.all()
-
-    context = {
+    return render(request, 'usuarios/registrar_campana.html', {
         'form': form,
-        'campanas': campanas,
-    }
-    return render(request, 'usuarios/registrar_campana.html', context)
+        'campanas': campanas
+    })
 
 
 
@@ -215,7 +216,7 @@ def registrar_proveedor(request):
         form = ProveedorForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('registrar_proveedor')  # Redirige después de guardar
+            return redirect('usuarios:registrar_proveedor')  # Redirige después de guardar
     else:
         form = ProveedorForm()
 
