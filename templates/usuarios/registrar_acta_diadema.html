@@ -1,6 +1,56 @@
-{% extends 'plantilla.html' %}
-{% load static %}
+{% block title %}Registrar Acta de Diadema{% endblock %}
+
 {% block content %}
-<h1>Página de Registrar Acta Diademas</h1>
-<p>Aquí podrás registrar el acta de diademas próximamente.</p>
+<h2>Registrar Acta de Diadema</h2>
+
+<form method="post" novalidate>
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label for="id_empleado">Empleado:</label>
+        <select class="form-control" id="id_empleado" name="empleado" required>
+            <option value="" selected disabled>Seleccione empleado</option>
+            {% for empleado in empleados %}
+            <option value="{{ empleado.id }}">{{ empleado.nombres }} {{ empleado.apellidos }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="id_marca_diadema">Marca de Diadema:</label>
+        <select class="form-control" id="id_marca_diadema" name="marca_diadema" required>
+            <option value="" selected disabled>Seleccione marca</option>
+            {% for marca in marcas_diadema %}
+            <option value="{{ marca.id }}">{{ marca.nombre }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="id_serial_diadema">Serial de la Diadema:</label>
+        <input type="text" class="form-control" id="id_serial_diadema" name="serial_diadema" required maxlength="50">
+    </div>
+
+    <div class="form-group">
+        <label for="id_precio_diadema">Precio de la Diadema:</label>
+        <input type="number" step="0.01" class="form-control" id="id_precio_diadema" name="precio_diadema" required>
+    </div>
+
+    <div class="form-group">
+        <label for="id_campana">Campaña:</label>
+        <select class="form-control" id="id_campana" name="campana" required>
+            <option value="" selected disabled>Seleccione campaña</option>
+            {% for campana in campanas %}
+            <option value="{{ campana.id }}">{{ campana.nombre }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="id_observaciones">Observaciones:</label>
+        <textarea class="form-control" id="id_observaciones" name="observaciones" rows="3"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Registrar</button>
+</form>
 {% endblock %}

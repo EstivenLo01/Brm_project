@@ -1,31 +1,115 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Registrar Acta de Equipo</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-</head>
-<body>
-    <div class="container mt-5">
-        <h2 class="mb-4">Registrar Acta de Equipo</h2>
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.non_field_errors }}
 
-            {% for field in form %}
-                <div class="form-group">
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    {{ field }}
-                    {% if field.errors %}
-                        <div class="text-danger">
-                            {{ field.errors }}
-                        </div>
-                    {% endif %}
-                </div>
+{% block title %}Registrar Acta de Equipo{% endblock %}
+
+{% block content %}
+<h2>Registrar Acta de Equipo</h2>
+
+<form method="post" novalidate>
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="id_proveedor">Proveedor:</label>
+        <select class="form-control" id="id_proveedor" name="proveedor" required>
+            <option value="" selected disabled>Seleccione proveedor</option>
+            {% for proveedor in proveedores %}
+            <option value="{{ proveedor.id }}">{{ proveedor.nombre }}</option>
             {% endfor %}
-
-            <button type="submit" class="btn btn-primary">Registrar</button>
-        </form>
+        </select>
     </div>
-</body>
-</html>
+
+    <div class="form-group">
+        <label for="id_serial_proveedor_cpu">Serial Proveedor CPU:</label>
+        <input type="text" class="form-control" id="id_serial_proveedor_cpu" name="serial_proveedor_cpu" required maxlength="100">
+    </div>
+
+    <div class="form-group">
+        <label for="id_serial_fabrica_cpu">Serial Fábrica CPU:</label>
+        <input type="text" class="form-control" id="id_serial_fabrica_cpu" name="serial_fabrica_cpu" required maxlength="100">
+    </div>
+
+    <div class="form-group">
+        <label for="id_serial_proveedor_monitor">Serial Proveedor Monitor:</label>
+        <input type="text" class="form-control" id="id_serial_proveedor_monitor" name="serial_proveedor_monitor" required maxlength="100">
+    </div>
+
+    <div class="form-group">
+        <label for="id_serial_fabrica_monitor">Serial Fábrica Monitor:</label>
+        <input type="text" class="form-control" id="id_serial_fabrica_monitor" name="serial_fabrica_monitor" required maxlength="100">
+    </div>
+
+    <div class="form-group">
+        <label>Equipamiento incluido:</label><br>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="id_teclado" name="teclado">
+            <label class="form-check-label" for="id_teclado">Teclado</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="id_mouse" name="mouse">
+            <label class="form-check-label" for="id_mouse">Mouse</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="id_monitor" name="monitor">
+            <label class="form-check-label" for="id_monitor">Monitor</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="id_cable_poder" name="cable_poder">
+            <label class="form-check-label" for="id_cable_poder">Cable Poder</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="id_adaptador_corriente" name="adaptador_corriente">
+            <label class="form-check-label" for="id_adaptador_corriente">Adaptador Corriente</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="id_cable_video" name="cable_video">
+            <label class="form-check-label" for="id_cable_video">Cable Video (HDMI/VGA/DP)</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="id_cable_red" name="cable_red">
+            <label class="form-check-label" for="id_cable_red">Cable Red</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="id_bolso" name="bolso">
+            <label class="form-check-label" for="id_bolso">Bolso</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="id_cargador" name="cargador">
+            <label class="form-check-label" for="id_cargador">Cargador</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="id_base" name="base">
+            <label class="form-check-label" for="id_base">Base</label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="id_guaya">Guaya (clave o llave):</label>
+        <input type="text" class="form-control" id="id_guaya" name="guaya" maxlength="20">
+    </div>
+
+    <div class="form-group">
+        <label for="id_empleado">Empleado:</label>
+        <select class="form-control" id="id_empleado" name="empleado" required>
+            <option value="" selected disabled>Seleccione empleado</option>
+            {% for empleado in empleados %}
+            <option value="{{ empleado.id }}">{{ empleado.nombres }} {{ empleado.apellidos }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="id_campana">Campaña:</label>
+        <select class="form-control" id="id_campana" name="campana" required>
+            <option value="" selected disabled>Seleccione campaña</option>
+            {% for campana in campanas %}
+            <option value="{{ campana.id }}">{{ campana.nombre }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="id_observaciones">Observaciones:</label>
+        <textarea class="form-control" id="id_observaciones" name="observaciones" rows="3"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Registrar</button>
+</form>
+{% endblock %}
