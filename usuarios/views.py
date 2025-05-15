@@ -75,41 +75,61 @@ def home(request):
         elif rol == 'digitador_actas':
             print('digitador_actas')
              #backend para quien digita las actas
-            x = reverse('usuarios:home')
+            x1 = reverse('usuarios:registrar_acta_equipo')
+            x2 = reverse('usuarios:registrar_acta_diadema')
+            x3 = reverse('usuarios:registrar_acta_proveedor')
             context = {
+                'icono_uno': 'fa-solid fa-folder-plus',
+                'nombre_uno': 'Registrar Acta Equipo',
                 'icono_dos': 'fa-solid fa-folder-plus',
-                'nombre_dos': 'Registrar Acta Equipo',
+                'nombre_dos': 'Registrar Acta Diadema',
                 'icono_tres': 'fa-solid fa-folder-plus',
-                'nombre_tres': 'Registrar Acta Diadema',
-                'icono_cuatro': 'fa-solid fa-user-plus',
-                'nombre_cuatro': 'Registrar Proveedor',
-                'icono_cinco': 'fa-solid fa-folder-plus',
-                'nombre_cinco': 'Registrar Acta Proveedor',
-                'icono_seis': 'fa-solid fa-user-plus',
-                'nombre_seis': 'Registrar Empleado',
-                'icono_siete': 'fa-solid fa-chart-simple',
-                'nombre_siete': 'Reportes',
-                'usuario': usuario, 
+                'nombre_tres': 'Registrar Acta Proveedor', 
                 'rol': rol,
-                'opcion_uno':  x       }
+                'opcion_dos':  x1,
+                'opcion_tres': x2,
+                'opcion_cinco': x3,
+                'usuario': usuario,     }
 
             return render(request, 'usuarios/home.html', context )
         elif rol == 'supervisor':
             print('supervisor')
              #backend para administrador
-            x = "{% url 'usuarios:salir' %}"
+            x2 = reverse('usuarios:registrar_acta_equipo')
+            x3 = reverse('usuarios:registrar_acta_diadema')
+            x4 = reverse('usuarios:registrar_proveedor')
+            x5 = reverse('usuarios:registrar_acta_proveedor')
+            y = reverse('usuarios:registrar_empleado')
+            x7 = reverse('usuarios:registrar_campana')
+            x8 = reverse('usuarios:inicioSessionXperfil')
+            x9 = reverse('usuarios:reportes')
             context = {
-                'icono_dos': 'fa-solid fa-folder-plus',
-                'nombre_dos': 'Registrar Acta Equipo',
-                'icono_tres': 'fa-solid fa-folder-plus',
+               'icono_uno': 'fa-solid fa-laptop',
+                'nombre_uno': 'Registrar Acta Equipo',
+                'icono_tres': 'fa-solid fa-headset',
                 'nombre_tres': 'Registrar Acta Diadema',
-                'icono_cuatro': 'fa-solid fa-user-plus',
+                'icono_cuatro': 'fa-solid fa-handshake',
                 'nombre_cuatro': 'Registrar Proveedor',
-                'icono_cinco': 'fa-solid fa-folder-plus',
+                'icono_cinco': 'fa-solid fa-file-signature',
                 'nombre_cinco': 'Registrar Acta Proveedor',
-                'usuario': usuario, 
+                'icono_seis': 'fa-solid fa-id-badge',
+                'nombre_seis': 'Registrar Empleado',
+                'icono_siete': 'fa-solid fa-bullhorn',
+                'nombre_siete': 'Registrar Campaña',
+                'icono_ocho': 'fa-solid fa-right-to-bracket',
+                'nombre_ocho': 'Inicio De Sesion X Perfil',
+                'icono_nueve': 'fa-solid fa-chart-line',
+                'nombre_nueve': 'Reportes',
                 'rol': rol,
-                'opcion_uno':  x       }
+                'opcion_uno':  x2,
+                'opcion_tres': x3,
+                'opcion_cuatro': x4,
+                'opcion_cinco': x5,
+                'opcion_seis': y,
+                'opcion_siete': x7,
+                'opcion_ocho': x8,
+                'opcion_nueve': x9,
+                'usuario': usuario,}
             return render(request, 'usuarios/home.html', context )
 
         else:
