@@ -1,56 +1,11 @@
-{% extends 'plantilla.html' %}
-{% load static %}
-{% block title %}<title>Registrar Empleado</title>{% endblock %}
-
-{% block content %}
-<div class="container mt-4">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Empleado</title>
+</head>
+<body>
     <h2>Registrar Empleado</h2>
-    <form method="post">
-        {% csrf_token %}
-        
-        <div class="row">
-            <div class="col-md-6">
-                <label for="cedula">Cédula</label>
-                <input type="text" class="form-control" name="cedula" required>
 
-                <label for="nombres" class="mt-2">Nombres</label>
-                <input type="text" class="form-control" name="nombres" required>
-
-                <label for="apellidos" class="mt-2">Apellidos</label>
-                <input type="text" class="form-control" name="apellidos" required>
-
-                <label for="correo" class="mt-2">Correo</label>
-                <input type="email" class="form-control" name="correo" required>
-
-                <label for="direccion" class="mt-2">Dirección</label>
-                <textarea name="direccion" class="form-control" required></textarea>
-            </div>
-
-            <div class="col-md-6">
-                <label for="telefono_movil">Teléfono Móvil</label>
-                <input type="text" class="form-control" name="telefono_movil" required>
-
-                <label for="telefono_fijo" class="mt-2">Teléfono Fijo</label>
-                <input type="text" class="form-control" name="telefono_fijo">
-
-                <label for="campana" class="mt-2">Campaña</label>
-                <select name="campana" class="form-control" required>
-                    {% for c in campanas %}
-                        <option value="{{ c.nombre_campana }}">{{ c.nombre_campana }}</option>
-                    {% endfor %}
-                </select>
-
-                <label for="estado" class="mt-2">Estado</label>
-                <select name="estado" class="form-control" required>
-                    <option value="Habilitado">Habilitado</option>
-                    <option value="Inhabilitado">Inhabilitado</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="text-center mt-4">
-            <button type="submit" class="btn btn-success">Registrar</button>
-        </div>
-    </form>
-</div>
-{% endblock %}
+</body>
+</html>
