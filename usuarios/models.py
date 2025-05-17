@@ -153,6 +153,6 @@ class ProveedorActa(models.Model):
         return f"Acta #{self.numero_orden_instalacion} - {self.contacto}"
     
 
-    
+
 
 

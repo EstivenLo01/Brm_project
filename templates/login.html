@@ -48,7 +48,10 @@ Swal.fire({
                 </div>
                 {% endfor %}
                 <br>
-                <button type="submit" class="btn-primary btn-block w-100 boton">Enviar</button>
+                <button type="submit" class="btn-primary btn-block w-100 boton">Iniciar Session</button>
+                <p class="text-center mt-2">
+                    <a href="{% url 'password_reset' %}">¿Olvidaste tu contraseña?</a>
+                </p>
             </form>
         </div>
     </div>
