@@ -7,8 +7,21 @@ class Form_login(forms.Form):
         widget=forms.EmailInput(attrs={'class': 'form-control'})
     )
     document_user = forms.IntegerField(
-        label='Documento',
+        label='Contraseña',
         widget=forms.NumberInput(attrs={'class': 'form-control'})
     )
 
 
+# class EstadoForm(forms.ModelForm):
+#     class Meta:
+#         model = Estado
+#         fields = ['Nombre_Estado']  # No se incluye ID_Estado porque se genera automáticamente
+#         widgets = {
+#             'Nombre_Estado': forms.TextInput(attrs={
+#                 'class': 'form-control',
+#                 'placeholder': 'Ingrese el nombre del estado'
+#             }),
+#         }
+#         labels = {
+#             'Nombre_Estado': 'Nombre del Estado'
+#         }

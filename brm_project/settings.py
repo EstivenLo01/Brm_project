@@ -84,13 +84,14 @@ WSGI_APPLICATION = 'brm_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'brm_projects',
+        'NAME': 'brm_project',
         'USER': 'root',
         'PASSWORD': 'Al3xander2123**',
-        'HOST': '127.0.0.1',
+        'HOST': 'localhost',
         'PORT': '443'
     }
 }
+
 
 
 # Password validation
@@ -134,3 +135,13 @@ STATICFILES_DIRS = [BASE_DIR/"static"]
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = 'stivenlopez1001@gmail.com'  # Usa tu correo de Gmail
+EMAIL_HOST_PASSWORD = 'anjp nnvo tfsn yqnd'
+
+

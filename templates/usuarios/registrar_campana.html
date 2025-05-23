@@ -1,0 +1,47 @@
+{% extends 'plantilla.html' %}
+{% block content %}
+
+
+
+<div class="container mt-5">
+    <h2>Registrar Campaña</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.nombre_campana.label_tag }}
+            {{ form.nombre_campana }}
+        </div>
+        <div class="mb-3">
+            {{ form.estado.label_tag }}
+            {{ form.estado }}
+        </div>
+        <button type="submit" class="btn btn-success">Registrar</button>
+    </form>
+
+    <hr>
+
+    <h4>Campañas Registradas</h4>
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for campana in campanas %}
+            <tr>
+                <td>{{ campana.nombre_campana }}</td>
+                <td>{{ campana.estado }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2">No hay campañas registradas</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+

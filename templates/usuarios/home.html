@@ -1,41 +1,77 @@
 {% extends 'plantilla.html' %}
 {% load static %}
-{% block title %} <title>Home Users</title>{% endblock %}
+{% block title %}<title>Home Users</title>{% endblock %}
 
 {% block content %}
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">{{usuario}}</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+<style>
+    body {
+        background-color: var(--light-gray);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">{{usuario}}</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarText">
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'usuarios:home' %}">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Salir</a>
-              </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'usuarios:home' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'usuarios:salir' %}">Cerrar sesión</a>
+                </li>
             </ul>
             <span class="navbar-text">
-              {{rol}}
+                {{rol}}
             </span>
-          </div>
         </div>
-      </nav>
+    </div>
+</nav>
+
 <div class="texto">
-    <h2>Bienvenido {{usuario}}</h2>
-</div>
-<div class="contenedor_options">
-<div class="card"></div>
-<div class="card"></div>
-<div class="card"></div>
-<div class="card"></div>
-<div class="card"></div>
-<div class="card"></div>
-<div class="card"></div>
-<div class="card"></div>
+    <h2 class="text-center">Bienvenido {{ usuario.name_user }}</h2>
 </div>
 
+<div class="contenedor_options">
+    <div class="card">
+        <i class="{{icono_uno}}" id="icono"></i>
+        <a href="{{opcion_uno}}" id="letra_opcion">{{nombre_uno}}</a>
+    </div>
+    <div class="card">
+        <i class="{{icono_dos}}" id="icono"></i>
+        <a href="{{opcion_dos}}" id="letra_opcion">{{nombre_dos}}</a>
+    </div>
+    <div class="card">
+        <i class="{{icono_tres}}" id="icono"></i>
+        <a href="{{opcion_tres}}" id="letra_opcion">{{nombre_tres}}</a>
+    </div>
+    <div class="card">
+        <i class="{{icono_cuatro}}" id="icono"></i>
+        <a href="{{opcion_cuatro}}" id="letra_opcion">{{nombre_cuatro}}</a>
+    </div>
+    <div class="card">
+        <i class="{{icono_cinco}}" id="icono"></i>
+        <a href="{{opcion_cinco}}" id="letra_opcion">{{nombre_cinco}}</a>
+    </div>
+    <div class="card">
+        <i class="{{icono_seis}}" id="icono"></i>
+        <a href="{{opcion_seis}}" id="letra_opcion">{{nombre_seis}}</a>
+    </div>
+    <div class="card">
+        <i class="{{icono_siete}}" id="icono"></i>
+        <a href="{{opcion_siete}}" id="letra_opcion">{{nombre_siete}}</a>
+    </div>
+    <div class="card">
+        <i class="{{icono_ocho}}" id="icono"></i>
+        <a href="{{opcion_ocho}}" id="letra_opcion">{{nombre_ocho}}</a>
+    </div>
+    <div class="card">
+        <i class="{{icono_nueve}}" id="icono"></i>
+        <a href="{{opcion_nueve}}" id="letra_opcion">{{nombre_nueve}}</a>
+    </div>
+</div>
 {% endblock %}

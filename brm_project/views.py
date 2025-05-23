@@ -3,6 +3,8 @@ from django.contrib import messages
 from . import forms
 from usuarios import models
 
+
+
 def login(request):
     if request.method == 'POST':
         form = forms.Form_login(request.POST)
@@ -15,7 +17,7 @@ def login(request):
             try:
                 usuario = models.User.objects.get(document_user=document_user, email=email)
 
-                # Guardar usuario en sesión manualmente
+                
                 request.session['user_id'] = usuario.idUser  
                 request.session['NombreUsuario'] = usuario.name_user  
                 request.session['is_authenticated'] = True  
@@ -29,3 +31,7 @@ def login(request):
     else:
         form = forms.Form_login()
     return render(request, 'login.html', {'form':form})
+
+
+
+

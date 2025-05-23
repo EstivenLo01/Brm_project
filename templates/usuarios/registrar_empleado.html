@@ -1,0 +1,66 @@
+{% block title %}Registrar Empleado{% endblock %}
+
+{% block content %}
+<h2>Registrar Empleado</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    <div>
+        <label>Cédula:</label>
+        <input type="text" name="cedula" required maxlength="20">
+    </div>
+
+    <div>
+        <label>Nombres:</label>
+        <input type="text" name="nombres" required maxlength="100">
+    </div>
+
+    <div>
+        <label>Apellidos:</label>
+        <input type="text" name="apellidos" required maxlength="100">
+    </div>
+
+    <div>
+        <label>Correo:</label>
+        <input type="email" name="correo" required>
+    </div>
+
+    <div>
+        <label>Teléfono Móvil:</label>
+        <input type="text" name="telefono_movil" required maxlength="15">
+    </div>
+
+    <div>
+        <label>Teléfono Fijo:</label>
+        <input type="text" name="telefono_fijo" maxlength="15">
+    </div>
+
+    <div>
+        <label>Dirección:</label>
+        <input type="text" name="direccion" required maxlength="255">
+    </div>
+
+    <div>
+        <label>Campaña:</label>
+        <select name="campana" required>
+            <option value="" disabled selected>Seleccione campaña</option>
+            {% for c in campanas %}
+            <option value="{{ c.id }}">{{ c.nombre }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div>
+        <label>Estado:</label>
+        <select name="estado" required>
+            <option value="" disabled selected>Seleccione estado</option>
+            {% for e in estados %}
+            <option value="{{ e.id }}">{{ e.nombre }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <button type="submit">Registrar</button>
+</form>
+{% endblock %}

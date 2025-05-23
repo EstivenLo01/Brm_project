@@ -1,0 +1,294 @@
+{% extends "plantilla.html" %}
+
+{% block title %} <title>Registrar Acta de Equipo</title>{% endblock %}
+
+{% load static %}
+{% block content %}
+{% include 'components/header.html' %}
+
+<!-- Header de la página -->
+<header class="page-header">
+    <div class="container">
+        <!-- <nav class="breadcrumb">
+            <span class="breadcrumb-item">Inicio</span>
+            <span class="breadcrumb-item">Equipos</span>
+            <span class="breadcrumb-item active">Registrar Acta</span>
+        </nav> -->
+        <h1><i class="fas fa-desktop"></i> Registrar Acta de Equipo</h1>
+        <p>Sistema de Gestión de Equipos Informáticos</p>
+    </div>
+</header>
+
+<!-- Contenido principal -->
+<main class="main-container-actas">
+    <div class="form-wrapper">
+        <div class="form-container">
+            <form method="post" novalidate>
+                <!-- Token CSRF para Django -->
+                {% csrf_token %}
+
+                <!-- Información del Proveedor -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-building"></i>
+                        Información del Proveedor
+                    </h3>
+                    <div class="form-group">
+                        <label for="id_proveedor">Proveedor <span class="required">*</span></label>
+                        <select class="form-control" id="id_proveedor" name="proveedor" required>
+                            <option value="" selected disabled>Seleccione proveedor</option>
+                            {% for proveedor in proveedores %}
+                            <option value="{{ proveedor.id }}">{{ proveedor.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Información de Seriales -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-barcode"></i>
+                        Información de Seriales
+                    </h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="id_serial_proveedor_cpu">Serial Proveedor CPU <span
+                                    class="required">*</span></label>
+                            <input type="text" class="form-control" id="id_serial_proveedor_cpu"
+                                name="serial_proveedor_cpu" required maxlength="100"
+                                placeholder="Ingrese el serial del proveedor">
+                        </div>
+                        <div class="form-group">
+                            <label for="id_serial_fabrica_cpu">Serial Fábrica CPU <span
+                                    class="required">*</span></label>
+                            <input type="text" class="form-control" id="id_serial_fabrica_cpu" name="serial_fabrica_cpu"
+                                required maxlength="100" placeholder="Ingrese el serial de fábrica">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="id_serial_proveedor_monitor">Serial Proveedor Monitor <span
+                                    class="required">*</span></label>
+                            <input type="text" class="form-control" id="id_serial_proveedor_monitor"
+                                name="serial_proveedor_monitor" required maxlength="100"
+                                placeholder="Ingrese el serial del proveedor">
+                        </div>
+                        <div class="form-group">
+                            <label for="id_serial_fabrica_monitor">Serial Fábrica Monitor <span
+                                    class="required">*</span></label>
+                            <input type="text" class="form-control" id="id_serial_fabrica_monitor"
+                                name="serial_fabrica_monitor" required maxlength="100"
+                                placeholder="Ingrese el serial de fábrica">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Equipamiento Incluido -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-clipboard-check"></i>
+                        Equipamiento Incluido
+                    </h3>
+                    <div class="checkbox-section">
+                        <div class="checkbox-grid">
+                            <div class="checkbox-item" onclick="toggleCheckbox('id_teclado')">
+                                <input type="checkbox" id="id_teclado" name="teclado">
+                                <label for="id_teclado"><i class="fas fa-keyboard"></i> Teclado</label>
+                            </div>
+                            <div class="checkbox-item" onclick="toggleCheckbox('id_mouse')">
+                                <input type="checkbox" id="id_mouse" name="mouse">
+                                <label for="id_mouse"><i class="fas fa-computer-mouse"></i> Mouse</label>
+                            </div>
+                            <div class="checkbox-item" onclick="toggleCheckbox('id_monitor')">
+                                <input type="checkbox" id="id_monitor" name="monitor">
+                                <label for="id_monitor"><i class="fas fa-tv"></i> Monitor</label>
+                            </div>
+                            <div class="checkbox-item" onclick="toggleCheckbox('id_cable_poder')">
+                                <input type="checkbox" id="id_cable_poder" name="cable_poder">
+                                <label for="id_cable_poder"><i class="fas fa-plug"></i> Cable Poder</label>
+                            </div>
+                            <div class="checkbox-item" onclick="toggleCheckbox('id_adaptador_corriente')">
+                                <input type="checkbox" id="id_adaptador_corriente" name="adaptador_corriente">
+                                <label for="id_adaptador_corriente"><i class="fas fa-battery-half"></i> Adaptador
+                                    Corriente</label>
+                            </div>
+                            <div class="checkbox-item" onclick="toggleCheckbox('id_cable_video')">
+                                <input type="checkbox" id="id_cable_video" name="cable_video">
+                                <label for="id_cable_video"><i class="fas fa-video"></i> Cable Video
+                                    (HDMI/VGA/DP)</label>
+                            </div>
+                            <div class="checkbox-item" onclick="toggleCheckbox('id_cable_red')">
+                                <input type="checkbox" id="id_cable_red" name="cable_red">
+                                <label for="id_cable_red"><i class="fas fa-network-wired"></i> Cable Red</label>
+                            </div>
+                            <div class="checkbox-item" onclick="toggleCheckbox('id_bolso')">
+                                <input type="checkbox" id="id_bolso" name="bolso">
+                                <label for="id_bolso"><i class="fas fa-briefcase"></i> Bolso</label>
+                            </div>
+                            <div class="checkbox-item" onclick="toggleCheckbox('id_cargador')">
+                                <input type="checkbox" id="id_cargador" name="cargador">
+                                <label for="id_cargador"><i class="fas fa-charging-station"></i> Cargador</label>
+                            </div>
+                            <div class="checkbox-item" onclick="toggleCheckbox('id_base')">
+                                <input type="checkbox" id="id_base" name="base">
+                                <label for="id_base"><i class="fas fa-layer-group"></i> Base</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información Adicional -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-info-circle"></i>
+                        Información Adicional
+                    </h3>
+                    <div class="form-group">
+                        <label for="id_guaya">Guaya (clave o llave)</label>
+                        <input type="text" class="form-control" id="id_guaya" name="guaya" maxlength="20"
+                            placeholder="Ingrese la clave de la guaya">
+                    </div>
+                </div>
+
+                <!-- Asignación -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-user-check"></i>
+                        Asignación
+                    </h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="id_empleado">Empleado <span class="required">*</span></label>
+                            <select class="form-control" id="id_empleado" name="empleado" required>
+                                <option value="" selected disabled>Seleccione empleado</option>
+                                {% for empleado in empleados %}
+                                <option value="{{ empleado.id }}">{{ empleado.nombres }} {{ empleado.apellidos }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_campana">Campaña <span class="required">*</span></label>
+                            <select class="form-control" id="id_campana" name="campana" required>
+                                <option value="" selected disabled>Seleccione campaña</option>
+                                {% for campana in campanas %}
+                                <option value="{{ campana.id }}">{{ campana.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Observaciones -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-comment-alt"></i>
+                        Observaciones
+                    </h3>
+                    <div class="form-group">
+                        <label for="id_observaciones">Observaciones</label>
+                        <textarea class="form-control" id="id_observaciones" name="observaciones" rows="4"
+                            placeholder="Ingrese cualquier observación adicional..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Botón de envío -->
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-save"></i>
+                        Registrar Acta
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<script>
+    function toggleCheckbox(checkboxId) {
+        const checkbox = document.getElementById(checkboxId);
+        const checkboxItem = checkbox.closest('.checkbox-item');
+
+        checkbox.checked = !checkbox.checked;
+
+        if (checkbox.checked) {
+            checkboxItem.classList.add('checked');
+        } else {
+            checkboxItem.classList.remove('checked');
+        }
+    }
+
+    
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkboxes = document.querySelectorAll('.checkbox-item input[type="checkbox"]');
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function () {
+                const checkboxItem = this.closest('.checkbox-item');
+                if (this.checked) {
+                    checkboxItem.classList.add('checked');
+                } else {
+                    checkboxItem.classList.remove('checked');
+                }
+            });
+        });
+
+        
+        const requiredFields = document.querySelectorAll('[required]');
+        requiredFields.forEach(field => {
+            field.addEventListener('blur', function () {
+                if (this.value.trim() === '') {
+                    this.classList.add('is-invalid');
+                } else {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                }
+            });
+
+            field.addEventListener('input', function () {
+                if (this.classList.contains('is-invalid') && this.value.trim() !== '') {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                }
+            });
+        });
+
+        
+        const selects = document.querySelectorAll('select.form-control');
+        selects.forEach(select => {
+            select.addEventListener('change', function () {
+                if (this.value !== '') {
+                    this.classList.add('is-valid');
+                    this.classList.remove('is-invalid');
+                }
+            });
+        });
+    });
+
+    
+    document.querySelector('form').addEventListener('submit', function (e) {
+        const requiredFields = this.querySelectorAll('[required]');
+        let hasErrors = false;
+
+        requiredFields.forEach(field => {
+            if (field.value.trim() === '') {
+                field.classList.add('is-invalid');
+                hasErrors = true;
+            } else {
+                field.classList.remove('is-invalid');
+                field.classList.add('is-valid');
+            }
+        });
+
+        if (hasErrors) {
+            e.preventDefault();
+           
+            const firstError = this.querySelector('.is-invalid');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                firstError.focus();
+            }
+        }
+    });
+</script>
+{% endblock %}
