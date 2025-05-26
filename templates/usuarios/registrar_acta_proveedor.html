@@ -8,104 +8,41 @@
         <h1><i class="fa-solid fa-handshake"></i> Registrar Acta de Proveedor</h1>
     </div>
 </header>
+<!-- contenedor principal -->
 <main class="main-container-actas">
     <div class="form-wrapper">
+        <!-- contenedor del formulario -->
         <div class="form-container">
+            <!-- formulario -->
             <form method="post">
                 {% csrf_token %}
-
+                {% for form in form %}
                 <div>
-                    <label for="id_proveedor">Proveedor:</label>
-                    <select name="proveedor" id="id_proveedor" required>
-                        <option value="" disabled selected>Seleccione proveedor</option>
-                        {% for proveedor in proveedores %}
-                        <option value="{{ proveedor.id }}">{{ proveedor.nombre }}</option>
-                        {% endfor %}
-                    </select>
+                    <label for="{{form.label}}">{{ form.label }}</label>
+                    {{form}}
                 </div>
-
-                <div>
-                    <label>Número Orden Instalación:</label>
-                    <input type="text" name="numero_orden_instalacion" required maxlength="50">
+                {% endfor %}
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-save"></i>
+                        Registrar Acta
+                    </button>
                 </div>
-
-                <div>
-                    <label>Número Pedido:</label>
-                    <input type="text" name="numero_pedido" required maxlength="50">
-                </div>
-
-                <div>
-                    <label>Fecha:</label>
-                    <input type="date" name="fecha" required>
-                </div>
-
-                <div>
-                    <label>Empresa:</label>
-                    <input type="text" name="empresa" value="BRM S.A.S" readonly>
-                </div>
-
-                <div>
-                    <label>Contacto:</label>
-                    <input type="text" name="contacto" required maxlength="100">
-                </div>
-
-                <div>
-                    <label>Dirección:</label>
-                    <input type="text" name="direccion" required maxlength="255">
-                </div>
-
-                <div>
-                    <label>Ciudad:</label>
-                    <input type="text" name="ciudad" required maxlength="100">
-                </div>
-
-                <div>
-                    <label>Teléfono:</label>
-                    <input type="text" name="telefono" required maxlength="20">
-                </div>
-
-                <div>
-                    <label>Equipo:</label>
-                    <input type="text" name="equipo" required maxlength="100">
-                </div>
-
-                <div>
-                    <label>Procesador:</label>
-                    <input type="text" name="procesador" required maxlength="100">
-                </div>
-
-                <div>
-                    <label>RAM (GB):</label>
-                    <input type="number" name="ram_gb" required>
-                </div>
-
-                <div>
-                    <label>Disco Duro (TB):</label>
-                    <input type="number" step="0.01" name="disco_duro_tb" required>
-                </div>
-
-                <div>
-                    <label><input type="checkbox" name="dvd_writer"> DVD Writer</label>
-                </div>
-
-                <div>
-                    <label>Entregado por:</label>
-                    <input type="text" name="entregado_por" required maxlength="100">
-                </div>
-
-                <div>
-                    <label>Recibido por:</label>
-                    <input type="text" name="recibido_por" maxlength="100">
-                </div>
-
-                <div>
-                    <label>Observaciones:</label><br>
-                    <textarea name="observaciones" rows="4" cols="40"></textarea>
-                </div>
-
-                <button type="submit">Registrar</button>
             </form>
         </div>
     </div>
 </main>
+<!-- mensajes de alerta Estiven: pasar a diccionario si quiere -->
+{% if messages %}
+{% for message in messages %}
+<script>
+    Swal.fire({
+        icon: '{% if "success" in message.tags %}success{% elif "error" in message.tags %}error{% elif "warning" in message.tags %}warning{% else %}info{% endif %}',
+        title: '{{ message.tags|capfirst }}',
+        text: '{{ message }}',
+        confirmButtonText: 'OK'
+    });
+</script>
+{% endfor %}
+{% endif %}
 {% endblock %}

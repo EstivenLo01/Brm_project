@@ -5,19 +5,10 @@ from django.http import HttpResponse
 from . import models, forms
 from django.urls import reverse
 from django.db.models import Q
-from .forms import EmpleadoForm
-from .forms import CampanaForm
-from .models import Campana
-from .models import Empleado
+from .forms import EmpleadoForm, CampanaForm, ProveedorForm, ProveedorActaForm
+from .models import Campana ,Empleado, Proveedor, ActaEquipo
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import logout
-from .forms import ProveedorForm
-from .models import Proveedor
 from usuarios.models import Estado
-
-
-
-
 
 def home(request):
     usuario = request.session.get('NombreUsuario','NO')
@@ -25,6 +16,7 @@ def home(request):
         return redirect('/login/')
     usuario = models.User.objects.get(name_user=usuario)
     if usuario.idRol:
+        global rol
         rol = usuario.idRol.name_rol
         if rol == 'administrador':
            print('administrador')
@@ -239,16 +231,35 @@ def registrar_proveedor(request):
         form = ProveedorForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('usuarios:registrar_proveedor')  # Redirige después de guardar
+            return redirect('usuarios:registrar_proveedor')  
     else:
         form = ProveedorForm()
 
-    proveedores = Proveedor.objects.all()  # Para mostrar la tabla
+    proveedores = Proveedor.objects.all()  
     return render(request, 'usuarios/registrar_proveedor.html', {'form': form, 'proveedores': proveedores})
 
 
 def registrar_acta_proveedor(request):
-    return render(request, 'usuarios/registrar_acta_proveedor.html')
+    usuario = request.session.get('NombreUsuario','NO')
+    if not request.session.get('is_authenticated'):
+        return redirect('/login/')
+    usuario = models.User.objects.get(name_user=usuario)
+    if request.method == 'POST':
+        form = forms.ProveedorActaForm(request.POST)
+        if form.is_valid():
+            acta = form.save()
+            messages.add_message(request, messages.SUCCESS, f" El acta {acta.numero_orden_instalacion}  ha sido registrada correctamente.", extra_tags='success')
+            return redirect('usuarios:registrar_acta_proveedor')  
+        else:
+            messages.add_message(request, messages.WARNING, "Hubo errores en el formulario. Por favor verifica los datos.", extra_tags='warning')
+    else:
+        form = forms.ProveedorActaForm()
+    context = {
+        'form': form,
+        'rol': rol,
+    }
+    return render(request, 'usuarios/registrar_acta_proveedor.html', context)
+
 
 def inicioSessionXperfil(request):
     return render(request, 'usuarios/inicioSessionXperfil.html')
