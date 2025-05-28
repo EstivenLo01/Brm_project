@@ -153,47 +153,89 @@ class ActaDiademaForm(forms.ModelForm):
 
 
 class ProveedorActaForm(forms.ModelForm):
+    proveedor = forms.ModelChoiceField(
+        queryset=Proveedor.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label='Proveedor'
+    )
+    numero_orden_instalacion= forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='Número de Orden de Instalación'
+    )
+    numero_pedido = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='Número de Pedido'
+    )
+    fecha = forms.DateField(
+        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+        label='Fecha'
+    )
+    empresa = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='Empresa'
+    )
+    contacto = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='Contacto'
+    )
+    direccion = forms.CharField(
+        max_length=200,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='Dirección'
+    )
+    ciudad = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='Ciudad'
+    )
+    telefono = forms.CharField(
+        max_length=15,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='Teléfono'
+    )
+    equipo = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='Equipo'
+    )
+    procesador = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='Procesador'
+    )
+    ram_gb = forms.IntegerField(
+        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        label='RAM (GB)'
+    )
+    disco_duro_tb = forms.FloatField(
+        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        label='Disco Duro (TB)'
+    )
+    dvd_writer = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        label='DVD Writer'
+    )
+    entregado_por = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='Entregado por'
+    )
+    recibido_por = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='Recibido por'
+    )
+    observaciones = forms.CharField(
+        max_length=500,
+        required=False,
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+        label='Observaciones'
+    )
     class Meta:
         model = ProveedorActa
-        fields = [
-            'proveedor',
-            'numero_orden_instalacion',
-            'numero_pedido',
-            'fecha',
-            'empresa',
-            'contacto',
-            'direccion',
-            'ciudad',
-            'telefono',
-            'equipo',
-            'procesador',
-            'ram_gb',
-            'disco_duro_tb',
-            'dvd_writer',
-            'entregado_por',
-            'recibido_por',
-            'observaciones',
-        ]
-        widgets = {
-            'fecha': forms.DateInput(attrs={'type': 'date'}),
-            'observaciones': forms.Textarea(attrs={'rows': 3}),
-        }
-        labels = {
-            'proveedor': 'Proveedor',
-            'numero_orden_instalacion': 'N° Orden de Instalación',
-            'numero_pedido': 'N° Pedido',
-            'fecha': 'Fecha',
-            'empresa': 'Empresa',
-            'contacto': 'Contacto',
-            'direccion': 'Dirección',
-            'ciudad': 'Ciudad',
-            'telefono': 'Teléfono',
-            'equipo': 'Equipo',
-            'procesador': 'Procesador',
-            'ram_gb': 'Memoria RAM (GB)',
-            'disco_duro_tb': 'Disco Duro (TB)',
-            'dvd_writer': 'Incluye DVD Writer',
-            'entregado_por': 'Entregado por',
-            'recibido_por': 'Recibido por',
-            'observaciones': 'Observaciones (opcional)',
-        }
+        fields = '__all__'
