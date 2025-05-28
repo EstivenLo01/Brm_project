@@ -58,7 +58,9 @@ def home(request):
                 'opcion_siete': x7,
                 'opcion_ocho': x8,
                 'opcion_nueve': x9,
-                'usuario': usuario,}
+                'usuario': usuario,
+                'rol': rol,
+                }
            return render(request, 'usuarios/home.html',context)
         
         
@@ -84,7 +86,9 @@ def home(request):
                 'opcion_dos':  x1,
                 'opcion_tres': x2,
                 'opcion_cuatro': x4,
-                'usuario': usuario,     }
+                'usuario': usuario,
+                'rol': rol,
+                          }
 
             return render(request, 'usuarios/home.html', context )
         elif rol == 'supervisor':
@@ -124,7 +128,9 @@ def home(request):
                 'opcion_siete': x7,
                 'opcion_ocho': x8,
                 'opcion_nueve': x9,
-                'usuario': usuario,}
+                'usuario': usuario,
+                'rol': rol,
+                }
             return render(request, 'usuarios/home.html', context )
 
         else:
@@ -244,6 +250,7 @@ def registrar_acta_proveedor(request):
     if not request.session.get('is_authenticated'):
         return redirect('/login/')
     usuario = models.User.objects.get(name_user=usuario)
+    rol = usuario.idRol.name_rol
     if request.method == 'POST':
         form = forms.ProveedorActaForm(request.POST)
         if form.is_valid():
