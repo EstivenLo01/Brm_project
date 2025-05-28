@@ -1,5 +1,22 @@
-{% extends 'plantilla.html' %}
+{% extends "plantilla.html" %}
+
+{% block title %} <title>Registrar Campaña</title>{% endblock %}
+
+{% load static %}
 {% block content %}
+{% include 'components/header.html' %}
+
+<header class="page-header">
+    <div class="container">
+        <!-- <nav class="breadcrumb">
+            <span class="breadcrumb-item">Inicio</span>
+            <span class="breadcrumb-item">Equipos</span>
+            <span class="breadcrumb-item active">Registrar Acta</span>
+        </nav> -->
+        <h1><i class="fas fa-desktop"></i> Registrar Campaña</h1>
+        <p>Sistema de Gestión de Equipos Informáticos</p>
+    </div>
+</header>
 
 
 
@@ -19,6 +36,11 @@
     </form>
 
     <hr>
+
+    <form method="get" class="mb-3 d-flex" style="gap: 10px; max-width: 400px;">
+        <input type="text" name="buscar" placeholder="Buscar campaña..." value="{{ buscar }}" class="form-control" />
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </form>
 
     <h4>Campañas Registradas</h4>
     <table class="table table-bordered mt-3">

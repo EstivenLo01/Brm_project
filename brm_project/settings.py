@@ -84,11 +84,11 @@ WSGI_APPLICATION = 'brm_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'brm_project',
+        'NAME': 'brm_projects',
         'USER': 'root',
-        'PASSWORD': 'Al3xander2123**',
+        'PASSWORD': '1234',
         'HOST': 'localhost',
-        'PORT': '443'
+        'PORT': ''
     }
 }
 

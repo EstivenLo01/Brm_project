@@ -202,6 +202,60 @@
             </form>
         </div>
     </div>
+
+    <div class="actas-table-section">
+    <h2 class="section-title"><i class="fas fa-list"></i> Actas Registradas</h2>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Proveedor</th>
+                    <th>CPU (Proveedor)</th>
+                    <th>Monitor (Proveedor)</th>
+                    <th>Empleado</th>
+                    <th>Campaña</th>
+                    <th>Observaciones</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for acta in actas %}
+                <tr>
+                    <td>{{ acta.proveedor.nombre }}</td>
+                    <td>{{ acta.serial_proveedor_cpu }}</td>
+                    <td>{{ acta.serial_proveedor_monitor }}</td>
+                    <td>
+                        {% if acta.teclado %}<i class="fas fa-keyboard" title="Teclado"></i> {% endif %}
+                        {% if acta.mouse %}<i class="fas fa-computer-mouse" title="Mouse"></i> {% endif %}
+                        {% if acta.monitor %}<i class="fas fa-tv" title="Monitor"></i> {% endif %}
+                        {% if acta.cable_poder %}<i class="fas fa-plug" title="Cable Poder"></i> {% endif %}
+                        {% if acta.adaptador_corriente %}<i class="fas fa-battery-half" title="Adaptador Corriente"></i> {% endif %}
+                        {% if acta.cable_video %}<i class="fas fa-video" title="Cable Video"></i> {% endif %}
+                        {% if acta.cable_red %}<i class="fas fa-network-wired" title="Cable Red"></i> {% endif %}
+                        {% if acta.bolso %}<i class="fas fa-briefcase" title="Bolso"></i> {% endif %}
+                        {% if acta.cargador %}<i class="fas fa-charging-station" title="Cargador"></i> {% endif %}
+                        {% if acta.base %}<i class="fas fa-layer-group" title="Base"></i> {% endif %}
+                    </td>
+                    <td>{{ acta.empleado.nombres }} {{ acta.empleado.apellidos }}</td>
+                    <td>{{ acta.campana.nombre }}</td>
+                    <td>{{ acta.observaciones|default:"-" }}</td>
+                    <td>{{ acta.fecha_creacion|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        <!-- Opcional: enlaces para editar o eliminar -->
+                        <a href="{% url 'editar_acta_equipo' acta.id %}" class="btn btn-sm btn-warning">Editar</a>
+                        <a href="{% url 'eliminar_acta_equipo' acta.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Está seguro de eliminar esta acta?')">Eliminar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="9" class="text-center">No hay actas registradas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 </main>
 
 <script>
