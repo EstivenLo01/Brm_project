@@ -14,57 +14,51 @@
         <div class="form-container">
             <form method="post" novalidate>
                 {% csrf_token %}
-
-                <div class="form-group-actas">
-                    <label for="id_empleado">Empleado:</label>
-                    <select class="form-control" id="id_empleado" name="empleado" required>
-                        <option value="" selected disabled>Seleccione empleado</option>
-                        {% for empleado in empleados %}
-                        <option value="{{ empleado.id }}">{{ empleado.nombres }} {{ empleado.apellidos }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
+                {% for form in form %}
                 <div class="form-group">
-                    <label for="id_marca_diadema">Marca de Diadema:</label>
-                    <select class="form-control" id="id_marca_diadema" name="marca_diadema" required>
-                        <option value="" selected disabled>Seleccione marca</option>
-                        {% for marca in marcas_diadema %}
-                        <option value="{{ marca.id }}">{{ marca.nombre }}</option>
-                        {% endfor %}
-                    </select>
+                    <label for="{{form.label}}">{{form.label}}</label>
+                   {{form}}
                 </div>
-
-                <div class="form-group">
-                    <label for="id_serial_diadema">Serial de la Diadema:</label>
-                    <input type="text" class="form-control" id="id_serial_diadema" name="serial_diadema" required
-                        maxlength="50">
-                </div>
-
-                <div class="form-group">
-                    <label for="id_precio_diadema">Precio de la Diadema:</label>
-                    <input type="number" step="0.01" class="form-control" id="id_precio_diadema" name="precio_diadema"
-                        required>
-                </div>
-
-                <div class="form-group">
-                    <label for="id_campana">Campaña:</label>
-                    <select class="form-control" id="id_campana" name="campana" required>
-                        <option value="" selected disabled>Seleccione campaña</option>
-                        {% for campana in campanas %}
-                        <option value="{{ campana.id }}">{{ campana.nombre }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="id_observaciones">Observaciones:</label>
-                    <textarea class="form-control" id="id_observaciones" name="observaciones" rows="3"></textarea>
-                </div>
-
+                {% endfor %}
                 <button type="submit" class="btn btn-primary">Registrar</button>
             </form>
         </div>
+    </div>
+</main>
+
+
+<main class="main-container-actas">
+    <div class="table-wrapper">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Empleado</th>
+                    <th>Marca</th>
+                    <th>Serial</th>
+                    <th>Precio</th>
+                    <th>Campaña</th>
+                    <th>Observaciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for acta in actas %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ acta.empleado.nombres }} {{ acta.empleado.apellidos }}</td>
+                    <td>{{ acta.marca_diadema.nombre }}</td>
+                    <td>{{ acta.serial_diadema }}</td>
+                    <td>${{ acta.precio_diadema }}</td>
+                    <td>{{ acta.campana.nombre }}</td>
+                    <td>{{ acta.observaciones|default:"-" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center">No hay actas registradas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </main>
 

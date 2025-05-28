@@ -32,17 +32,55 @@
         </div>
     </div>
 </main>
-<!-- mensajes de alerta Estiven: pasar a diccionario si quiere -->
-{% if messages %}
-{% for message in messages %}
-<script>
-    Swal.fire({
-        icon: '{% if "success" in message.tags %}success{% elif "error" in message.tags %}error{% elif "warning" in message.tags %}warning{% else %}info{% endif %}',
-        title: '{{ message.tags|capfirst }}',
-        text: '{{ message }}',
-        confirmButtonText: 'OK'
-    });
-</script>
-{% endfor %}
-{% endif %}
+
+<main class="main-container-actas">
+    <div class="table-responsive" style="margin-left: 20px;">
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Proveedor</th>
+                    <th>N° Orden</th>
+                    <th>N° Pedido</th>
+                    <th>Fecha</th>
+                    <th>Contacto</th>
+                    <th>Teléfono</th>
+                    <th>Equipo</th>
+                    <th>Procesador</th>
+                    <th>RAM (GB)</th>
+                    <th>Disco Duro (TB)</th>
+                    <th>DVD Writer</th>
+                    <th>Entregado por</th>
+                    <th>Recibido por</th>
+                    <th>Observaciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for acta in actas_proveedor %}
+                <tr>
+                    <td>{{ acta.id_ProveedorActa }}</td>
+                    <td>{{ acta.proveedor.nombre }}</td>
+                    <td>{{ acta.numero_orden_instalacion }}</td>
+                    <td>{{ acta.numero_pedido }}</td>
+                    <td>{{ acta.fecha }}</td>
+                    <td>{{ acta.contacto }}</td>
+                    <td>{{ acta.telefono }}</td>
+                    <td>{{ acta.equipo }}</td>
+                    <td>{{ acta.procesador }}</td>
+                    <td>{{ acta.ram_gb }}</td>
+                    <td>{{ acta.disco_duro_tb }}</td>
+                    <td>{{ acta.dvd_writer|yesno:"Sí,No" }}</td>
+                    <td>{{ acta.entregado_por }}</td>
+                    <td>{{ acta.recibido_por }}</td>
+                    <td>{{ acta.observaciones }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="15" class="text-center">No hay actas registradas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
 {% endblock %}

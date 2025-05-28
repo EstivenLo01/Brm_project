@@ -1,66 +1,101 @@
-{% block title %}Registrar Empleado{% endblock %}
+{% extends "plantilla.html" %}
 
+{% block title %} <title>Registrar Empleado</title>{% endblock %}
+
+{% load static %}
 {% block content %}
-<h2>Registrar Empleado</h2>
+{% include 'components/header.html' %}
 
-<form method="post">
-    {% csrf_token %}
-
-    <div>
-        <label>Cédula:</label>
-        <input type="text" name="cedula" required maxlength="20">
+<header class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-desktop"></i> Registrar Empleado</h1>
     </div>
+</header>
 
-    <div>
-        <label>Nombres:</label>
-        <input type="text" name="nombres" required maxlength="100">
-    </div>
+<div class="container mt-5">
+    <form method="post">
+        {% csrf_token %}
+      
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="{{form.label}}" class="form-label">{{form.cedula.label_tag}}</label>
+               {{form.cedula}}
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="nombres" class="form-label">{{form.nombres.label_tag}}</label>
+                {{form.nombres}}
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="apellidos" class="form-label">{{form.apellidos.label_tag}}</label>
+                {{form.apellidos}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="correo" class="form-label">{{form.correo.label_tag}}</label>
+               {{form.correo}}
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="telefono_movil" class="form-label">{{form.telefono_movil.label_tag}}</label>
+                {{form.telefono_movil}}
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="telefono_fijo" class="form-label">{{form.telefono_fijo.label_tag}}</label>
+               {{form.telefono_fijo}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="direccion" class="form-label">{{form.direccion.label_tag}}</label>
+               {{form.direccion}}
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="campana" class="form-label">{{form.campana.label_tag}}</label>
+                {{ form.campana }}
+            </div>
+            <div class="col-md-2 mb-3">
+                <label for="estado" class="form-label">{{form.estado.label_tag}}</label>
+                {{ form.estado }}
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Registrar</button>
+    </form>
 
-    <div>
-        <label>Apellidos:</label>
-        <input type="text" name="apellidos" required maxlength="100">
-    </div>
+    <hr>
 
-    <div>
-        <label>Correo:</label>
-        <input type="email" name="correo" required>
-    </div>
-
-    <div>
-        <label>Teléfono Móvil:</label>
-        <input type="text" name="telefono_movil" required maxlength="15">
-    </div>
-
-    <div>
-        <label>Teléfono Fijo:</label>
-        <input type="text" name="telefono_fijo" maxlength="15">
-    </div>
-
-    <div>
-        <label>Dirección:</label>
-        <input type="text" name="direccion" required maxlength="255">
-    </div>
-
-    <div>
-        <label>Campaña:</label>
-        <select name="campana" required>
-            <option value="" disabled selected>Seleccione campaña</option>
-            {% for c in campanas %}
-            <option value="{{ c.id }}">{{ c.nombre }}</option>
+    <h3 class="mt-5">Empleados Registrados</h3>
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th>Cédula</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
+                <th>Campaña</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for empleado in empleados %}
+                <tr>
+                    <td>{{ empleado.cedula }}</td>
+                    <td>{{ empleado.nombres }}</td>
+                    <td>{{ empleado.apellidos }}</td>
+                    <td>{{ empleado.correo }}</td>
+                    <td>{{ empleado.telefono_movil }}</td>
+                    <td>{{ empleado.direccion }}</td>
+                    <td>{{ empleado.campana.nombre }}</td>
+                    <td>{{ empleado.estado }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center">No hay empleados registrados.</td>
+                </tr>
             {% endfor %}
-        </select>
-    </div>
-
-    <div>
-        <label>Estado:</label>
-        <select name="estado" required>
-            <option value="" disabled selected>Seleccione estado</option>
-            {% for e in estados %}
-            <option value="{{ e.id }}">{{ e.nombre }}</option>
-            {% endfor %}
-        </select>
-    </div>
-
-    <button type="submit">Registrar</button>
-</form>
+        </tbody>
+    </table>
+</div>
 {% endblock %}

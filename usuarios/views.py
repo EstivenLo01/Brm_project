@@ -5,10 +5,32 @@ from django.http import HttpResponse
 from . import models, forms
 from django.urls import reverse
 from django.db.models import Q
-from .forms import EmpleadoForm, CampanaForm, ProveedorForm, ProveedorActaForm
-from .models import Campana ,Empleado, Proveedor, ActaEquipo
+from .forms import EmpleadoForm
+from .forms import CampanaForm
+from .models import Campana
+from .models import Empleado
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
+from .forms import ProveedorForm
+from .models import Proveedor
 from usuarios.models import Estado
+from .models import ProveedorActa
+from usuarios.models import Proveedor
+from .models import Empleado
+from usuarios.models import Campana, Estado
+from django.db import IntegrityError
+from .forms import ActaDiademaForm
+from .models import Empleado, Campana, marca_diadema
+from django.shortcuts import render, redirect
+from .models import ProveedorActa, Proveedor
+
+
+
+
+
+
+
+
 
 def home(request):
     usuario = request.session.get('NombreUsuario','NO')
@@ -16,7 +38,6 @@ def home(request):
         return redirect('/login/')
     usuario = models.User.objects.get(name_user=usuario)
     if usuario.idRol:
-        global rol
         rol = usuario.idRol.name_rol
         if rol == 'administrador':
            print('administrador')
@@ -105,20 +126,20 @@ def home(request):
             context = {
                'icono_uno': 'fa-solid fa-laptop',
                 'nombre_uno': 'Registrar Acta Equipo',
-                'icono_tres': 'fa-solid fa-headset',
-                'nombre_tres': 'Registrar Acta Diadema',
-                'icono_cuatro': 'fa-solid fa-handshake',
-                'nombre_cuatro': 'Registrar Proveedor',
-                'icono_cinco': 'fa-solid fa-file-signature',
-                'nombre_cinco': 'Registrar Acta Proveedor',
-                'icono_seis': 'fa-solid fa-id-badge',
-                'nombre_seis': 'Registrar Empleado',
-                'icono_siete': 'fa-solid fa-bullhorn',
-                'nombre_siete': 'Registrar Campaña',
-                'icono_ocho': 'fa-solid fa-right-to-bracket',
-                'nombre_ocho': 'Inicio De Sesion X Perfil',
-                'icono_nueve': 'fa-solid fa-chart-line',
-                'nombre_nueve': 'Reportes',
+                'icono_dos': 'fa-solid fa-headset',
+                'nombre_dos': 'Registrar Acta Diadema',
+                'icono_tres': 'fa-solid fa-handshake',
+                'nombre_tres': 'Registrar Proveedor',
+                'icono_cuatro': 'fa-solid fa-file-signature',
+                'nombre_cuatro': 'Registrar Acta Proveedor',
+                'icono_cinco': 'fa-solid fa-id-badge',
+                'nombre_cinco': 'Registrar Empleado',
+                'icono_seis': 'fa-solid fa-bullhorn',
+                'nombre_seis': 'Registrar Campaña',
+                'icono_siete': 'fa-solid fa-right-to-bracket',
+                'nombre_siete': 'Inicio De Sesion X Perfil',
+                'icono_ocho': 'fa-solid fa-chart-line',
+                'nombre_ocho': 'Reportes',
                 'rol': rol,
                 'opcion_uno':  x2,
                 'opcion_tres': x3,
@@ -198,51 +219,156 @@ def desactivar(request, idUser):
 
 
 def registrar_campana(request):
-    if request.method == 'POST':
+    search_query = request.GET.get('buscar', '')  # Obtener valor del input buscar
+
+    if search_query:
+        campanas = Campana.objects.filter(nombre_campana__icontains=search_query)
+    else:
+        campanas = Campana.objects.all()
+
+    if request.method == "POST":
         form = CampanaForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('usuarios:registrar_campana')
+            render(request, 'usuarios/registrar_campana.html')
     else:
         form = CampanaForm()
-    
-    campanas = Campana.objects.all()
+
     return render(request, 'usuarios/registrar_campana.html', {
         'form': form,
-        'campanas': campanas
+        'campanas': campanas,
+        'buscar': search_query,
     })
 
 
 
+
+
 def registrar_empleado(request):
+    usuario = request.session.get('NombreUsuario','NO')
+    if not request.session.get('is_authenticated'):
+        return redirect('/login/')
+    usuario = models.User.objects.get(name_user=usuario)
+    rol = usuario.idRol.name_rol
     if request.method == 'POST':
         form = EmpleadoForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('home')  # O a una página de éxito
+            return render(request, 'usuarios/registrar_empleado.html')
     else:
         form = EmpleadoForm()
-    return render(request, 'usuarios/registrar_empleado.html', {'form': form})
 
+    context = {
+        'form': form,
+        'usuario': usuario,
+        'rol': rol,
+    }
+    
+    return render(request, 'usuarios/registrar_empleado.html', context)
+
+
+  # Asegúrate de tener esta relación
 
 def registrar_acta_equipo(request):
-    return render(request, 'usuarios/registrar_acta_equipo.html')
+    if request.method == 'POST':
+        proveedor_id = request.POST.get('proveedor')
+        numero_orden_instalacion = request.POST.get('numero_orden_instalacion')
+        numero_pedido = request.POST.get('numero_pedido')
+        fecha = request.POST.get('fecha')
+        empresa = request.POST.get('empresa', 'BRM S.A.S')  # Default si no se manda desde el form
+        contacto = request.POST.get('contacto')
+        direccion = request.POST.get('direccion')
+        ciudad = request.POST.get('ciudad')
+        telefono = request.POST.get('telefono')
+
+        equipo = request.POST.get('equipo')
+        procesador = request.POST.get('procesador')
+        ram_gb = request.POST.get('ram_gb')
+        disco_duro_tb = request.POST.get('disco_duro_tb')
+        dvd_writer = 'dvd_writer' in request.POST  # Checkbox
+
+        entregado_por = request.POST.get('entregado_por')
+        recibido_por = request.POST.get('recibido_por')
+        observaciones = request.POST.get('observaciones')
+
+        ProveedorActa.objects.create(
+            proveedor_id=proveedor_id,
+            numero_orden_instalacion=numero_orden_instalacion,
+            numero_pedido=numero_pedido,
+            fecha=fecha,
+            empresa=empresa,
+            contacto=contacto,
+            direccion=direccion,
+            ciudad=ciudad,
+            telefono=telefono,
+            equipo=equipo,
+            procesador=procesador,
+            ram_gb=ram_gb,
+            disco_duro_tb=disco_duro_tb,
+            dvd_writer=dvd_writer,
+            entregado_por=entregado_por,
+            recibido_por=recibido_por,
+            observaciones=observaciones
+        )
+        return redirect('registrar_acta_equipo')
+
+    proveedores = Proveedor.objects.all()
+    actas = ProveedorActa.objects.order_by('-fecha')  # Para mostrar en la tabla
+
+    return render(request, 'usuarios/registrar_acta_equipo.html', {
+        'proveedores': proveedores,
+        'actas': actas,
+    })
+
+
 
 def registrar_acta_diadema(request):
-    return render(request, 'usuarios/registrar_acta_diadema.html')
+    usuario = request.session.get('NombreUsuario','NO')
+    if not request.session.get('is_authenticated'):
+        return redirect('/login/')
+    usuario = models.User.objects.get(name_user=usuario)
+    rol = usuario.idRol.name_rol
+    if request.method == 'POST':
+        form = ActaDiademaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('registrar_acta_diadema.html')  
+    else:
+        form = ActaDiademaForm()
+
+    context = {
+        'form': form,
+        'rol': rol,
+    }
+
+    return render(request, 'usuarios/registrar_acta_diadema.html', context)
+
+
 
 
 def registrar_proveedor(request):
+    buscar = request.GET.get('buscar', '')  # Captura el texto de búsqueda
+
     if request.method == 'POST':
         form = ProveedorForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('usuarios:registrar_proveedor')  
+            return redirect('registrar_proveedor')  # Cambia según el nombre de tu URL
     else:
         form = ProveedorForm()
 
-    proveedores = Proveedor.objects.all()  
-    return render(request, 'usuarios/registrar_proveedor.html', {'form': form, 'proveedores': proveedores})
+    if buscar:
+        proveedores = Proveedor.objects.filter(nombre_proveedor__icontains=buscar)
+    else:
+        proveedores = Proveedor.objects.all()
+
+    context = {
+        'form': form,
+        'proveedores': proveedores,
+        'buscar': buscar,
+    }
+    return render(request, 'usuarios/registrar_proveedor.html', context)
+
 
 
 def registrar_acta_proveedor(request):
@@ -261,12 +387,21 @@ def registrar_acta_proveedor(request):
             messages.add_message(request, messages.WARNING, "Hubo errores en el formulario. Por favor verifica los datos.", extra_tags='warning')
     else:
         form = forms.ProveedorActaForm()
+    proveedores = Proveedor.objects.all()
+    actas_proveedor = ProveedorActa.objects.all()
     context = {
+        'proveedores': proveedores,
+        'actas_proveedor': actas_proveedor,
         'form': form,
         'rol': rol,
     }
     return render(request, 'usuarios/registrar_acta_proveedor.html', context)
 
+
+
+    
+
+   
 
 def inicioSessionXperfil(request):
     return render(request, 'usuarios/inicioSessionXperfil.html')

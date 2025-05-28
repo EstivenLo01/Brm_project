@@ -65,24 +65,60 @@ class desactivar(forms.ModelForm):
    class Meta:
         model = models.User
         fields = ['id_estado']
-
-
-
 class EmpleadoForm(forms.ModelForm):
+    cedula = forms.CharField(
+        max_length=20,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='Cédula'
+    )
+    nombres = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='Nombres'
+    )
+    apellidos = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='Apellidos'
+    )
+    correo = forms.EmailField(
+        widget=forms.EmailInput(attrs={'class': 'form-control'}),
+        label='Correo Electrónico'
+    )
+    telefono_movil = forms.CharField(
+        max_length=15,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='Teléfono Móvil'
+    )
+    telefono_fijo = forms.CharField(
+        max_length=15,
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='Teléfono Fijo (opcional)'
+    )
+    direccion = forms.CharField(
+        max_length=255,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='Dirección'
+    )
+    campana = forms.ModelChoiceField(
+        queryset=Campana.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label='Campaña'
+    )
+    estado = forms.ModelChoiceField(
+        queryset=models.Estado.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label='Estado'
+    )
     class Meta:
         model = Empleado
         fields = '__all__'
-        widgets = {
-            'direccion': forms.Textarea(attrs={'rows': 2, 'class': 'form-control'}),
-            'correo': forms.EmailInput(attrs={'class': 'form-control'}),
-        }
-
+        
 class CampanaForm(forms.ModelForm):
     class Meta:
         model = Campana
         fields = ['nombre_campana', 'estado']
-
-
 class ProveedorForm(forms.ModelForm):
     class Meta:
         model = Proveedor
@@ -128,6 +164,38 @@ class ActaEquipoForm(forms.ModelForm):
 
 
 class ActaDiademaForm(forms.ModelForm):
+    empleado = forms.ModelChoiceField(
+        queryset=Empleado.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label='Empleado'
+    )
+    marca_diadema = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='Marca de la Diadema'
+    )
+    serial_diadema = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='Serial de la Diadema'
+    )
+    precio_diadema = forms.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+        label='Precio (COP)'
+    )
+    campana = forms.ModelChoiceField(
+        queryset=Campana.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label='Campaña'
+    )
+    observaciones = forms.CharField(
+        max_length=500,
+        required=False,
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+        label='Observaciones (opcional)'
+    )
     class Meta:
         model = ActaDiadema
         fields = [
@@ -138,16 +206,6 @@ class ActaDiademaForm(forms.ModelForm):
             'campana',
             'observaciones',
         ]
-        widgets = {
-            'observaciones': forms.Textarea(attrs={'rows': 4}),
-            'precio_diadema': forms.NumberInput(attrs={'step': '0.01'}),
-        }
-        labels = {
-            'marca_diadema': 'Marca de la Diadema',
-            'serial_diadema': 'Serial de la Diadema',
-            'precio_diadema': 'Precio (COP)',
-            'observaciones': 'Observaciones (opcional)',
-        }
 
 
 
