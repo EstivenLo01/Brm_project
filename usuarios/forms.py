@@ -8,8 +8,6 @@ from .models import ActaDiadema
 from .models import ProveedorActa
 from .models import marca_diadema
 
-
-
 class RegistroUser(forms.ModelForm):
     class Meta:
         model = models.User
@@ -66,6 +64,7 @@ class desactivar(forms.ModelForm):
    class Meta:
         model = models.User
         fields = ['id_estado']
+
 class EmpleadoForm(forms.ModelForm):
     cedula = forms.CharField(
         max_length=20,
@@ -127,41 +126,106 @@ class ProveedorForm(forms.ModelForm):
 
 
 class ActaEquipoForm(forms.ModelForm):
+    proveedor = forms.ModelChoiceField(
+        queryset=Proveedor.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        label='Proveedor'
+    )
+    serial_proveedor_cpu = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='Serial del Proveedor (CPU)'
+    )
+    serial_fabrica_cpu = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='Serial de Fábrica (CPU)'
+    )
+    serial_proveedor_monitor = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='Serial del Proveedor (Monitor)'
+    )
+    serial_fabrica_monitor = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='Serial de Fábrica (Monitor)'
+    )
+    teclado = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        label='Teclado'
+    )
+    mouse = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        label='Mouse'
+    )
+    monitor = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        label='Monitor'
+    )
+    cable_poder = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        label='Cable de Poder'
+    )
+    adaptador_corriente = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        label='Adaptador de Corriente'
+    )
+    cable_video = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        label='Cable de Video'
+    )
+    cable_red = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        label='Cable de Red'
+    )
+    bolso = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        label='Bolso'
+    )
+    cargador = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        label='Cargador'
+    )
+    base = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        label='Base'
+    )
+    guaya = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        label='Guaya'
+    )
+    empleado = forms.ModelChoiceField(
+        queryset=Empleado.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label='Empleado'
+    )
+    campana = forms.ModelChoiceField(
+        queryset=Campana.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label='Campaña'
+    )
+    observaciones = forms.CharField(
+        max_length=500,
+        required=False,
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+        label='Observaciones (opcional)'
+    )
     class Meta:
         model = ActaEquipo
-        fields = [
-            'proveedor',
-            'serial_proveedor_cpu',
-            'serial_fabrica_cpu',
-            'serial_proveedor_monitor',
-            'serial_fabrica_monitor',
-            'teclado',
-            'mouse',
-            'monitor',
-            'cable_poder',
-            'adaptador_corriente',
-            'cable_video',
-            'cable_red',
-            'bolso',
-            'cargador',
-            'base',
-            'guaya',
-            'empleado',
-            'campana',
-            'observaciones',
-        ]
-        widgets = {
-            'observaciones': forms.Textarea(attrs={'rows': 4}),
-            'guaya': forms.TextInput(attrs={'placeholder': 'Clave o llave de la guaya'}),
-        }
-        labels = {
-            'serial_proveedor_cpu': 'Serial CPU (Proveedor)',
-            'serial_fabrica_cpu': 'Serial CPU (Fábrica)',
-            'serial_proveedor_monitor': 'Serial Monitor (Proveedor)',
-            'serial_fabrica_monitor': 'Serial Monitor (Fábrica)',
-            'cable_video': 'Cable de video (HDMI/VGA/DP)',
-            'guaya': 'Guaya (clave o llave)',
-        }
+        fields = '__all__'
+        
 
 
 class ActaDiademaForm(forms.ModelForm):

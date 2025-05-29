@@ -9,13 +9,7 @@
 <!-- Header de la página -->
 <header class="page-header">
     <div class="container">
-        <!-- <nav class="breadcrumb">
-            <span class="breadcrumb-item">Inicio</span>
-            <span class="breadcrumb-item">Equipos</span>
-            <span class="breadcrumb-item active">Registrar Acta</span>
-        </nav> -->
         <h1><i class="fas fa-desktop"></i> Registrar Acta de Equipo</h1>
-        <p>Sistema de Gestión de Equipos Informáticos</p>
     </div>
 </header>
 
@@ -23,8 +17,8 @@
 <main class="main-container-actas">
     <div class="form-wrapper">
         <div class="form-container">
-            <form method="post" novalidate>
-                <!-- Token CSRF para Django -->
+            <form method="POST">
+               
                 {% csrf_token %}
 
                 <!-- Información del Proveedor -->
@@ -34,13 +28,8 @@
                         Información del Proveedor
                     </h3>
                     <div class="form-group">
-                        <label for="id_proveedor">Proveedor <span class="required">*</span></label>
-                        <select class="form-control" id="id_proveedor" name="proveedor" required>
-                            <option value="" selected disabled>Seleccione proveedor</option>
-                            {% for proveedor in proveedores %}
-                            <option value="{{ proveedor.id }}">{{ proveedor.nombre }}</option>
-                            {% endfor %}
-                        </select>
+                        <label for="id_proveedor">Proveedor<span class="required">*</span></label>
+                        {{ form.proveedor}}
                     </div>
                 </div>
 
@@ -52,33 +41,26 @@
                     </h3>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="id_serial_proveedor_cpu">Serial Proveedor CPU <span
+                            <label for="id_serial_proveedor_cpu">Serial proveedor CPU <span
                                     class="required">*</span></label>
-                            <input type="text" class="form-control" id="id_serial_proveedor_cpu"
-                                name="serial_proveedor_cpu" required maxlength="100"
-                                placeholder="Ingrese el serial del proveedor">
+                            {{ form.serial_proveedor_cpu }}
                         </div>
                         <div class="form-group">
                             <label for="id_serial_fabrica_cpu">Serial Fábrica CPU <span
                                     class="required">*</span></label>
-                            <input type="text" class="form-control" id="id_serial_fabrica_cpu" name="serial_fabrica_cpu"
-                                required maxlength="100" placeholder="Ingrese el serial de fábrica">
+                           {{form.serial_fabrica_cpu }}
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="id_serial_proveedor_monitor">Serial Proveedor Monitor <span
                                     class="required">*</span></label>
-                            <input type="text" class="form-control" id="id_serial_proveedor_monitor"
-                                name="serial_proveedor_monitor" required maxlength="100"
-                                placeholder="Ingrese el serial del proveedor">
+                            {{form.serial_proveedor_monitor }}
                         </div>
                         <div class="form-group">
                             <label for="id_serial_fabrica_monitor">Serial Fábrica Monitor <span
                                     class="required">*</span></label>
-                            <input type="text" class="form-control" id="id_serial_fabrica_monitor"
-                                name="serial_fabrica_monitor" required maxlength="100"
-                                placeholder="Ingrese el serial de fábrica">
+                            {{form.serial_fabrica_monitor }}
                         </div>
                     </div>
                 </div>
@@ -92,45 +74,45 @@
                     <div class="checkbox-section">
                         <div class="checkbox-grid">
                             <div class="checkbox-item" onclick="toggleCheckbox('id_teclado')">
-                                <input type="checkbox" id="id_teclado" name="teclado">
+                                {{ form.teclado }}
                                 <label for="id_teclado"><i class="fas fa-keyboard"></i> Teclado</label>
                             </div>
                             <div class="checkbox-item" onclick="toggleCheckbox('id_mouse')">
-                                <input type="checkbox" id="id_mouse" name="mouse">
+                                {{ form.mouse }}
                                 <label for="id_mouse"><i class="fas fa-computer-mouse"></i> Mouse</label>
                             </div>
                             <div class="checkbox-item" onclick="toggleCheckbox('id_monitor')">
-                                <input type="checkbox" id="id_monitor" name="monitor">
+                                {{ form.monitor }}
                                 <label for="id_monitor"><i class="fas fa-tv"></i> Monitor</label>
                             </div>
                             <div class="checkbox-item" onclick="toggleCheckbox('id_cable_poder')">
-                                <input type="checkbox" id="id_cable_poder" name="cable_poder">
+                               {{ form.cable_poder }}
                                 <label for="id_cable_poder"><i class="fas fa-plug"></i> Cable Poder</label>
                             </div>
                             <div class="checkbox-item" onclick="toggleCheckbox('id_adaptador_corriente')">
-                                <input type="checkbox" id="id_adaptador_corriente" name="adaptador_corriente">
+                               {{ form.adaptador_corriente }}
                                 <label for="id_adaptador_corriente"><i class="fas fa-battery-half"></i> Adaptador
                                     Corriente</label>
                             </div>
                             <div class="checkbox-item" onclick="toggleCheckbox('id_cable_video')">
-                                <input type="checkbox" id="id_cable_video" name="cable_video">
+                               {{ form.cable_video }}
                                 <label for="id_cable_video"><i class="fas fa-video"></i> Cable Video
                                     (HDMI/VGA/DP)</label>
                             </div>
                             <div class="checkbox-item" onclick="toggleCheckbox('id_cable_red')">
-                                <input type="checkbox" id="id_cable_red" name="cable_red">
+                               {{ form.cable_red }}
                                 <label for="id_cable_red"><i class="fas fa-network-wired"></i> Cable Red</label>
                             </div>
                             <div class="checkbox-item" onclick="toggleCheckbox('id_bolso')">
-                                <input type="checkbox" id="id_bolso" name="bolso">
+                               {{ form.bolso }}
                                 <label for="id_bolso"><i class="fas fa-briefcase"></i> Bolso</label>
                             </div>
                             <div class="checkbox-item" onclick="toggleCheckbox('id_cargador')">
-                                <input type="checkbox" id="id_cargador" name="cargador">
+                                {{ form.cargador }}
                                 <label for="id_cargador"><i class="fas fa-charging-station"></i> Cargador</label>
                             </div>
                             <div class="checkbox-item" onclick="toggleCheckbox('id_base')">
-                                <input type="checkbox" id="id_base" name="base">
+                                {{ form.base }}
                                 <label for="id_base"><i class="fas fa-layer-group"></i> Base</label>
                             </div>
                         </div>
@@ -145,8 +127,7 @@
                     </h3>
                     <div class="form-group">
                         <label for="id_guaya">Guaya (clave o llave)</label>
-                        <input type="text" class="form-control" id="id_guaya" name="guaya" maxlength="20"
-                            placeholder="Ingrese la clave de la guaya">
+                       {{ form.guaya }}
                     </div>
                 </div>
 
@@ -159,22 +140,11 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="id_empleado">Empleado <span class="required">*</span></label>
-                            <select class="form-control" id="id_empleado" name="empleado" required>
-                                <option value="" selected disabled>Seleccione empleado</option>
-                                {% for empleado in empleados %}
-                                <option value="{{ empleado.id }}">{{ empleado.nombres }} {{ empleado.apellidos }}
-                                </option>
-                                {% endfor %}
-                            </select>
+                            {{ form.empleado }}
                         </div>
                         <div class="form-group">
                             <label for="id_campana">Campaña <span class="required">*</span></label>
-                            <select class="form-control" id="id_campana" name="campana" required>
-                                <option value="" selected disabled>Seleccione campaña</option>
-                                {% for campana in campanas %}
-                                <option value="{{ campana.id }}">{{ campana.nombre }}</option>
-                                {% endfor %}
-                            </select>
+                            {{ form.campana }}
                         </div>
                     </div>
                 </div>
@@ -187,8 +157,7 @@
                     </h3>
                     <div class="form-group">
                         <label for="id_observaciones">Observaciones</label>
-                        <textarea class="form-control" id="id_observaciones" name="observaciones" rows="4"
-                            placeholder="Ingrese cualquier observación adicional..."></textarea>
+                       {{ form.observaciones }}
                     </div>
                 </div>
 
@@ -210,19 +179,17 @@
             <thead>
                 <tr>
                     <th>Proveedor</th>
-                    <th>CPU (Proveedor)</th>
-                    <th>Monitor (Proveedor)</th>
-                    <th>Empleado</th>
-                    <th>Campaña</th>
-                    <th>Observaciones</th>
-                    <th>Fecha</th>
+                    <th>CPU</th>
+                    <th>Monitor</th>
+                    <th>Tiene</th>
+                    <th>Asignado a</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {% for acta in actas %}
                 <tr>
-                    <td>{{ acta.proveedor.nombre }}</td>
+                    <td>{{ acta.proveedor.nombre_proveedor }}</td>
                     <td>{{ acta.serial_proveedor_cpu }}</td>
                     <td>{{ acta.serial_proveedor_monitor }}</td>
                     <td>
@@ -238,13 +205,10 @@
                         {% if acta.base %}<i class="fas fa-layer-group" title="Base"></i> {% endif %}
                     </td>
                     <td>{{ acta.empleado.nombres }} {{ acta.empleado.apellidos }}</td>
-                    <td>{{ acta.campana.nombre }}</td>
-                    <td>{{ acta.observaciones|default:"-" }}</td>
-                    <td>{{ acta.fecha_creacion|date:"d/m/Y H:i" }}</td>
                     <td>
                         <!-- Opcional: enlaces para editar o eliminar -->
-                        <a href="{% url 'editar_acta_equipo' acta.id %}" class="btn btn-sm btn-warning">Editar</a>
-                        <a href="{% url 'eliminar_acta_equipo' acta.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Está seguro de eliminar esta acta?')">Eliminar</a>
+                        <a href="{ url 'editar_acta_equipo' acta.id }" class="btn btn-sm btn-warning">Editar</a>
+                        <a href="{url 'eliminar_acta_equipo' acta.id }" class="btn btn-sm btn-danger" onclick="return confirm('¿Está seguro de eliminar esta acta?')">Eliminar</a>
                     </td>
                 </tr>
                 {% empty %}
@@ -345,4 +309,18 @@
         }
     });
 </script>
+{% if form.errors %}
+<div class="form-errors">
+    <ul>
+    {% for field in form %}
+        {% for error in field.errors %}
+            <li>{{ field.label }}: {{ error }}</li>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+</div>
+{% endif %}
 {% endblock %}

@@ -25,18 +25,6 @@ from django.shortcuts import render, redirect
 from .models import ProveedorActa, Proveedor
 from .models import ActaDiadema
 
-
-
-
-
-
-
-
-
-
-
-
-
 def home(request):
     usuario = request.session.get('NombreUsuario','NO')
     if not request.session.get('is_authenticated'):
@@ -177,6 +165,7 @@ def RegistroUser(request):
     if not request.session.get('is_authenticated'):
         return redirect('/login/')
     usuario = models.User.objects.get(name_user=usuario)
+    rol = usuario.idRol.name_rol
     if request.method == 'POST':
         form = forms.RegistroUser(request.POST)
         if form.is_valid:
@@ -200,6 +189,7 @@ def RegistroUser(request):
         'usuarios': usuarios,
         'usuario': usuario,
         'query': query,
+        'rol':rol
     }
     return render(request, 'usuarios/registroUser.html',context)
 
@@ -208,9 +198,11 @@ def desactivar(request, idUser):
     if not request.session.get('is_authenticated'):
         return redirect('/login/')
     usuario = models.User.objects.get(name_user=usuario)
+    rol = usuario.idRol.name_rol
     desactivar = models.User.objects.get(idUser=idUser)
     context={
         'usuario': usuario,
+        'rol': rol,
     }
     if request.method == 'POST':
         form = forms.desactivar(request.POST, instance=desactivar)
@@ -224,6 +216,11 @@ def desactivar(request, idUser):
 
 
 def registrar_campana(request):
+    usuario = request.session.get('NombreUsuario','NO')
+    if not request.session.get('is_authenticated'):
+        return redirect('/login/')
+    usuario = models.User.objects.get(name_user=usuario)
+    rol = usuario.idRol.name_rol
     search_query = request.GET.get('buscar', '')  # Obtener valor del input buscar
 
     if search_query:
@@ -243,16 +240,20 @@ def registrar_campana(request):
         'form': form,
         'campanas': campanas,
         'buscar': search_query,
+        'rol': rol,
     })
 
 
 
 
 
-  # si estás usando un ModelForm
-
 
 def registrar_empleado(request):
+    usuario = request.session.get('NombreUsuario','NO')
+    if not request.session.get('is_authenticated'):
+        return redirect('/login/')
+    usuario = models.User.objects.get(name_user=usuario)
+    rol = usuario.idRol.name_rol
     query = request.GET.get('buscar')  # Obtener término de búsqueda
     empleados = Empleado.objects.select_related('campana', 'estado')
 
@@ -277,68 +278,55 @@ def registrar_empleado(request):
     return render(request, 'usuarios/registrar_empleado.html', {
         'form': form,
         'empleados': empleados,   
+        'rol': rol,
     })
 
 
-  # Asegúrate de tener esta relación
+
 
 def registrar_acta_equipo(request):
+    usuario = request.session.get('NombreUsuario','NO')
+    if not request.session.get('is_authenticated'):
+        return redirect('/login/')
+    usuario = models.User.objects.get(name_user=usuario)
+    rol = usuario.idRol.name_rol
     if request.method == 'POST':
-        proveedor_id = request.POST.get('proveedor')
-        numero_orden_instalacion = request.POST.get('numero_orden_instalacion')
-        numero_pedido = request.POST.get('numero_pedido')
-        fecha = request.POST.get('fecha')
-        empresa = request.POST.get('empresa', 'BRM S.A.S')  # Default si no se manda desde el form
-        contacto = request.POST.get('contacto')
-        direccion = request.POST.get('direccion')
-        ciudad = request.POST.get('ciudad')
-        telefono = request.POST.get('telefono')
-
-        equipo = request.POST.get('equipo')
-        procesador = request.POST.get('procesador')
-        ram_gb = request.POST.get('ram_gb')
-        disco_duro_tb = request.POST.get('disco_duro_tb')
-        dvd_writer = 'dvd_writer' in request.POST  # Checkbox
-
-        entregado_por = request.POST.get('entregado_por')
-        recibido_por = request.POST.get('recibido_por')
-        observaciones = request.POST.get('observaciones')
-        archivo_adjunto=archivo_adjunto
-
-        ProveedorActa.objects.create(
-            proveedor_id=proveedor_id,
-            numero_orden_instalacion=numero_orden_instalacion,
-            numero_pedido=numero_pedido,
-            fecha=fecha,
-            empresa=empresa,
-            contacto=contacto,
-            direccion=direccion,
-            ciudad=ciudad,
-            telefono=telefono,
-            equipo=equipo,
-            procesador=procesador,
-            ram_gb=ram_gb,
-            disco_duro_tb=disco_duro_tb,
-            dvd_writer=dvd_writer,
-            entregado_por=entregado_por,
-            recibido_por=recibido_por,
-            observaciones=observaciones
+        form = forms.ActaEquipoForm(request.POST)  
+        if form.is_valid():
+            form.save()
+            return redirect('usuarios:registrar_acta_equipo')
+    else:
+        form = forms.ActaEquipoForm()
+        print('no es post')
+    query = request.GET.get('buscar')
+    if query:
+        actas = models.ActaEquipo.objects.filter(
+            Q(empleado__cedula__icontains=query) |
+            Q(empleado__nombres__icontains=query) |
+            Q(empleado__apellidos__icontains=query) |
+            Q(serial_equipo__icontains=query) |
+            Q(marca_equipo__nombre_marca_equipo__icontains=query)
         )
-        return redirect('registrar_acta_equipo')
-
-    proveedores = Proveedor.objects.all()
-    actas = ProveedorActa.objects.order_by('-fecha')  # Para mostrar en la tabla
-
-    return render(request, 'usuarios/registrar_acta_equipo.html', {
-        'proveedores': proveedores,
-        'actas': actas,
-    })
+    else:
+        actas = models.ActaEquipo.objects.all()
+    context = {
+    'form': form,
+    'actas': actas,
+    'usuario': usuario,
+    'rol': rol,
+}
+    return render(request, 'usuarios/registrar_acta_equipo.html', context)
 
 
 
 
 
 def registrar_acta_diadema(request):
+    usuario = request.session.get('NombreUsuario','NO')
+    if not request.session.get('is_authenticated'):
+        return redirect('/login/')
+    usuario = models.User.objects.get(name_user=usuario)
+    rol = usuario.idRol.name_rol
     if request.method == 'POST':
         form = ActaDiademaForm(request.POST, request.FILES)  
         if form.is_valid():
@@ -362,14 +350,20 @@ def registrar_acta_diadema(request):
     return render(request, 'usuarios/registrar_acta_diadema.html', {
         'form': form,
         'actas': actas,
+        'rol': rol,
     })
 
 
 
 def registrar_proveedor(request):
-    buscar = request.GET.get('buscar', '')  # Captura el texto de búsqueda
+    usuario = request.session.get('NombreUsuario','NO')
+    if not request.session.get('is_authenticated'):
+        return redirect('/login/')
+    usuario = models.User.objects.get(name_user=usuario)
+    rol = usuario.idRol.name_rol
+    buscar = request.GET.get('buscar', '')  
 
-    # Crear el formulario, procesar si es POST
+   
     if request.method == 'POST':
         form = ProveedorForm(request.POST)
         if form.is_valid():
@@ -378,7 +372,7 @@ def registrar_proveedor(request):
     else:
         form = ProveedorForm()
 
-    # Filtrar proveedores por búsqueda si hay texto
+   
     if buscar:
         proveedores = Proveedor.objects.filter(nombre_proveedor__icontains=buscar)
     else:
@@ -388,6 +382,7 @@ def registrar_proveedor(request):
         'form': form,
         'proveedores': proveedores,
         'buscar': buscar,
+        'rol': rol,
     }
     return render(request, 'usuarios/registrar_proveedor.html', context)
 
