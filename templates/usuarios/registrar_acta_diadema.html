@@ -1,4 +1,5 @@
-{% extends 'plantilla.html' %}
+
+</form>{% extends 'plantilla.html' %}
 {% block title %} <title>Registrar Acta de Diadema</title>{% endblock %}
 
 {% block content %}
@@ -13,6 +14,7 @@
     <div class="form-wrapper">
         <div class="form-container">
             <form method="post" novalidate>
+            <form method="post" enctype="multipart/form-data" novalidate></form>
                 {% csrf_token %}
                 {% for form in form %}
                 <div class="form-group">
@@ -24,6 +26,10 @@
             </form>
         </div>
     </div>
+    <form method="get" class="mb-3">
+        <input type="text" name="buscar" placeholder="Buscar por cédula, nombre o serial" class="form-control" value="{{ request.GET.buscar }}">
+        <button type="submit" class="btn btn-secondary mt-2">Buscar</button>
+</form>
 </main>
 
 
@@ -46,10 +52,10 @@
                 <tr>
                     <td>{{ forloop.counter }}</td>
                     <td>{{ acta.empleado.nombres }} {{ acta.empleado.apellidos }}</td>
-                    <td>{{ acta.marca_diadema.nombre }}</td>
+                    <td>{{ acta.marca_diadema.nombre_marca_diadema }}</td>
                     <td>{{ acta.serial_diadema }}</td>
                     <td>${{ acta.precio_diadema }}</td>
-                    <td>{{ acta.campana.nombre }}</td>
+                    <td>{{ acta.campana }}</td>
                     <td>{{ acta.observaciones|default:"-" }}</td>
                 </tr>
                 {% empty %}

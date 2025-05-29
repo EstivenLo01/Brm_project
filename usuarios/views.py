@@ -23,6 +23,11 @@ from .forms import ActaDiademaForm
 from .models import Empleado, Campana, marca_diadema
 from django.shortcuts import render, redirect
 from .models import ProveedorActa, Proveedor
+from .models import ActaDiadema
+
+
+
+
 
 
 
@@ -244,27 +249,35 @@ def registrar_campana(request):
 
 
 
+  # si estás usando un ModelForm
+
+
 def registrar_empleado(request):
-    usuario = request.session.get('NombreUsuario','NO')
-    if not request.session.get('is_authenticated'):
-        return redirect('/login/')
-    usuario = models.User.objects.get(name_user=usuario)
-    rol = usuario.idRol.name_rol
+    query = request.GET.get('buscar')  # Obtener término de búsqueda
+    empleados = Empleado.objects.select_related('campana', 'estado')
+
+    if query:
+        empleados = empleados.filter(
+            Q(nombres__icontains=query) |
+            Q(apellidos__icontains=query) |
+            Q(cedula__icontains=query) |
+            Q(correo__icontains=query) |
+            Q(telefono_movil__icontains=query) |
+            Q(direccion__icontains=query)
+        )
+
     if request.method == 'POST':
         form = EmpleadoForm(request.POST)
         if form.is_valid():
             form.save()
-            return render(request, 'usuarios/registrar_empleado.html')
+            render(request, 'usuarios/registrar_empleado.html')
     else:
         form = EmpleadoForm()
 
-    context = {
+    return render(request, 'usuarios/registrar_empleado.html', {
         'form': form,
-        'usuario': usuario,
-        'rol': rol,
-    }
-    
-    return render(request, 'usuarios/registrar_empleado.html', context)
+        'empleados': empleados,   
+    })
 
 
   # Asegúrate de tener esta relación
@@ -290,6 +303,7 @@ def registrar_acta_equipo(request):
         entregado_por = request.POST.get('entregado_por')
         recibido_por = request.POST.get('recibido_por')
         observaciones = request.POST.get('observaciones')
+        archivo_adjunto=archivo_adjunto
 
         ProveedorActa.objects.create(
             proveedor_id=proveedor_id,
@@ -322,41 +336,49 @@ def registrar_acta_equipo(request):
 
 
 
+
+
 def registrar_acta_diadema(request):
-    usuario = request.session.get('NombreUsuario','NO')
-    if not request.session.get('is_authenticated'):
-        return redirect('/login/')
-    usuario = models.User.objects.get(name_user=usuario)
-    rol = usuario.idRol.name_rol
     if request.method == 'POST':
-        form = ActaDiademaForm(request.POST)
+        form = ActaDiademaForm(request.POST, request.FILES)  
         if form.is_valid():
             form.save()
-            return redirect('registrar_acta_diadema.html')  
+            return redirect('usuarios:registrar_acta_diadema')
     else:
         form = ActaDiademaForm()
 
-    context = {
+    query = request.GET.get('buscar')
+    if query:
+        actas = ActaDiadema.objects.filter(
+            Q(empleado__cedula__icontains=query) |
+            Q(empleado__nombres__icontains=query) |
+            Q(empleado__apellidos__icontains=query) |
+            Q(serial_diadema__icontains=query) |
+            Q(marca_diadema__nombre_marca_diadema__icontains=query)
+        )
+    else:
+        actas = ActaDiadema.objects.all()
+
+    return render(request, 'usuarios/registrar_acta_diadema.html', {
         'form': form,
-        'rol': rol,
-    }
-
-    return render(request, 'usuarios/registrar_acta_diadema.html', context)
-
+        'actas': actas,
+    })
 
 
 
 def registrar_proveedor(request):
     buscar = request.GET.get('buscar', '')  # Captura el texto de búsqueda
 
+    # Crear el formulario, procesar si es POST
     if request.method == 'POST':
         form = ProveedorForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('registrar_proveedor')  # Cambia según el nombre de tu URL
+            render(request, 'usuarios/registrar_proveedor.html')
     else:
         form = ProveedorForm()
 
+    # Filtrar proveedores por búsqueda si hay texto
     if buscar:
         proveedores = Proveedor.objects.filter(nombre_proveedor__icontains=buscar)
     else:
@@ -371,30 +393,47 @@ def registrar_proveedor(request):
 
 
 
+
+
 def registrar_acta_proveedor(request):
-    usuario = request.session.get('NombreUsuario','NO')
+    usuario = request.session.get('NombreUsuario', 'NO')
     if not request.session.get('is_authenticated'):
         return redirect('/login/')
+    
     usuario = models.User.objects.get(name_user=usuario)
     rol = usuario.idRol.name_rol
+
+    query = request.GET.get('buscar')
+    actas_proveedor = ProveedorActa.objects.all()
+
+    if query:
+        actas_proveedor = actas_proveedor.filter(
+            Q(numero_orden_instalacion__icontains=query) |
+            Q(numero_pedido__icontains=query) |
+            Q(proveedor__nombre_proveedor__icontains=query) |  
+            Q(contacto__icontains=query)
+        )
+
     if request.method == 'POST':
         form = forms.ProveedorActaForm(request.POST)
         if form.is_valid():
             acta = form.save()
-            messages.add_message(request, messages.SUCCESS, f" El acta {acta.numero_orden_instalacion}  ha sido registrada correctamente.", extra_tags='success')
-            return redirect('usuarios:registrar_acta_proveedor')  
+            messages.add_message(request, messages.SUCCESS, f"El acta {acta.numero_orden_instalacion} ha sido registrada correctamente.", extra_tags='success')
+            return redirect('usuarios:registrar_acta_proveedor')
         else:
             messages.add_message(request, messages.WARNING, "Hubo errores en el formulario. Por favor verifica los datos.", extra_tags='warning')
     else:
         form = forms.ProveedorActaForm()
+
     proveedores = Proveedor.objects.all()
-    actas_proveedor = ProveedorActa.objects.all()
+
     context = {
         'proveedores': proveedores,
         'actas_proveedor': actas_proveedor,
         'form': form,
         'rol': rol,
     }
+
     return render(request, 'usuarios/registrar_acta_proveedor.html', context)
 
 

@@ -6,6 +6,7 @@ from .models import Proveedor
 from .models import ActaEquipo
 from .models import ActaDiadema
 from .models import ProveedorActa
+from .models import marca_diadema
 
 
 
@@ -69,7 +70,7 @@ class EmpleadoForm(forms.ModelForm):
     cedula = forms.CharField(
         max_length=20,
         widget=forms.TextInput(attrs={'class': 'form-control'}),
-        label='Cédula'
+        label='Cédula/T.I'
     )
     nombres = forms.CharField(
         max_length=100,
@@ -169,9 +170,9 @@ class ActaDiademaForm(forms.ModelForm):
         widget=forms.Select(attrs={'class': 'form-select'}),
         label='Empleado'
     )
-    marca_diadema = forms.CharField(
-        max_length=100,
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
+    marca_diadema = forms.ModelChoiceField(
+        queryset=marca_diadema.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control'}),
         label='Marca de la Diadema'
     )
     serial_diadema = forms.CharField(
@@ -196,6 +197,13 @@ class ActaDiademaForm(forms.ModelForm):
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
         label='Observaciones (opcional)'
     )
+
+    archivo = forms.FileField(
+        required=False,
+        widget=forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        label='Adjuntar archivo'
+    )
+
     class Meta:
         model = ActaDiadema
         fields = [
@@ -205,6 +213,7 @@ class ActaDiademaForm(forms.ModelForm):
             'precio_diadema',
             'campana',
             'observaciones',
+            'archivo',
         ]
 
 
@@ -294,6 +303,13 @@ class ProveedorActaForm(forms.ModelForm):
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
         label='Observaciones'
     )
+
+    archivo_adjunto = forms.FileField(
+    required=False,
+    widget=forms.ClearableFileInput(attrs={'class': 'form-control'}),
+    label='Adjuntar archivo'
+    )
+
     class Meta:
         model = ProveedorActa
         fields = '__all__'

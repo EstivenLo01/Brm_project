@@ -64,11 +64,16 @@
 
     <hr>
 
+    <form method="get" class="mb-4 d-flex">
+        <input type="text" name="buscar" class="form-control me-2" placeholder="Buscar empleado..." value="{{ buscar }}">
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </form>
+
     <h3 class="mt-5">Empleados Registrados</h3>
     <table class="table table-bordered table-striped mt-3">
         <thead class="table-dark">
             <tr>
-                <th>Cédula</th>
+                <th>Cédula/TI</th>
                 <th>Nombres</th>
                 <th>Apellidos</th>
                 <th>Correo</th>
@@ -87,7 +92,7 @@
                     <td>{{ empleado.correo }}</td>
                     <td>{{ empleado.telefono_movil }}</td>
                     <td>{{ empleado.direccion }}</td>
-                    <td>{{ empleado.campana.nombre }}</td>
+                    <td>{{ empleado.campana }}</td>
                     <td>{{ empleado.estado }}</td>
                 </tr>
             {% empty %}

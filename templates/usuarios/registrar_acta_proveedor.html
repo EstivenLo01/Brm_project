@@ -15,6 +15,7 @@
         <div class="form-container">
             <!-- formulario -->
             <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {% for form in form %}
                 <div>
@@ -26,12 +27,20 @@
                     <button type="submit" class="btn-submit">
                         <i class="fas fa-save"></i>
                         Registrar Acta
+            </form>
                     </button>
-                </div>
+                </div>               
             </form>
         </div>
     </div>
+    <form method="post" enctype="multipart/form-data" novalidate></form>
+    <form method="get" class="mb-4 d-flex">
+        <input type="text" name="buscar" class="form-control me-2" placeholder="Buscar acta..." value="{{ buscar }}">
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </form>
 </main>
+
+    
 
 <main class="main-container-actas">
     <div class="table-responsive" style="margin-left: 20px;">
@@ -59,7 +68,7 @@
                 {% for acta in actas_proveedor %}
                 <tr>
                     <td>{{ acta.id_ProveedorActa }}</td>
-                    <td>{{ acta.proveedor.nombre }}</td>
+                    <td>{{ acta.proveedor }}</td>
                     <td>{{ acta.numero_orden_instalacion }}</td>
                     <td>{{ acta.numero_pedido }}</td>
                     <td>{{ acta.fecha }}</td>
