@@ -24,6 +24,9 @@ from .models import Empleado, Campana, marca_diadema
 from django.shortcuts import render, redirect
 from .models import ProveedorActa, Proveedor
 from .models import ActaDiadema
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Campana, Estado
+
 
 def home(request):
     usuario = request.session.get('NombreUsuario','NO')
@@ -213,8 +216,6 @@ def desactivar(request, idUser):
         form = forms.desactivar(instance=desactivar)
     return render(request, 'usuarios/desactivar.html', context)
 
-
-
 def registrar_campana(request):
     usuario = request.session.get('NombreUsuario','NO')
     if not request.session.get('is_authenticated'):
@@ -244,9 +245,45 @@ def registrar_campana(request):
     })
 
 
+def editar_campana(request, id_campana):
+    campana = get_object_or_404(Campana, id_campana=id_campana)
+
+    if request.method == 'POST':
+        form = CampanaForm(request.POST, instance=campana)
+        if form.is_valid():
+            form.save()
+            render(request, 'usuarios/registrar_campana.html')
+    else:
+        form = CampanaForm(instance=campana)
+
+    return render(request, 'usuarios/editar_campana.html', {'form': form})
+
+def confirmar_habilitar_campana(request, campana_id):
+    campana = get_object_or_404(Campana, id_campana=campana_id)
+
+    if request.method == 'POST':
+        habilitado = Estado.objects.get(nombre='Habilitado')
+        campana.estado = habilitado
+        campana.save()
+        render(request, 'usuarios/registrar_empleado.html')
+
+    return render(request, 'usuarios/confirmar_habilitar_campana.html', {
+        'campana': campana
+    })
 
 
+def confirmar_deshabilitar_campana(request, campana_id):
+    campana = get_object_or_404(Campana, id_campana=campana_id)
 
+    if request.method == 'POST':
+        deshabilitado = Estado.objects.get(nombre='Deshabilitado')
+        campana.estado = deshabilitado
+        campana.save()
+        render(request, 'usuarios/registrar_empleado.html')
+
+    return render(request, 'usuarios/confirmar_deshabilitar_campana.html', {
+        'campana': campana
+    })
 
 def registrar_empleado(request):
     usuario = request.session.get('NombreUsuario','NO')
@@ -279,6 +316,22 @@ def registrar_empleado(request):
         'form': form,
         'empleados': empleados,   
         'rol': rol,
+    })
+
+def editar_empleado(request, id_empleado):
+    empleado = get_object_or_404(Empleado, id_empleado=id_empleado)
+
+    if request.method == 'POST':
+        form = EmpleadoForm(request.POST, instance=empleado)
+        if form.is_valid():
+            form.save()
+            render(request, 'usuarios/registrar_empleado.html')
+    else:
+        form = EmpleadoForm(instance=empleado)
+
+    return render(request, 'usuarios/editar_empleado.html', {
+        'form': form,
+        'empleado': empleado,
     })
 
 
@@ -386,9 +439,21 @@ def registrar_proveedor(request):
     }
     return render(request, 'usuarios/registrar_proveedor.html', context)
 
+def editar_proveedor(request, id_proveedor):
+    proveedor = get_object_or_404(Proveedor, id_proveedor=id_proveedor)
 
+    if request.method == 'POST':
+        form = ProveedorForm(request.POST, instance=proveedor)
+        if form.is_valid():
+            form.save()
+            render(request, 'usuarios/registrar_proveedor.html')
+    else:
+        form = ProveedorForm(instance=proveedor)
 
-
+    return render(request, 'usuarios/editar_proveedor.html', {
+        'form': form,
+        'proveedor': proveedor,
+    })
 
 def registrar_acta_proveedor(request):
     usuario = request.session.get('NombreUsuario', 'NO')

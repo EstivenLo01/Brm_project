@@ -1,0 +1,17 @@
+{% extends "plantilla.html" %}
+{% block title %}<title>Editar Empleado</title>{% endblock %}
+{% load static %}
+{% block content %}
+{% include 'components/header.html' %}
+
+<div class="container mt-5">
+    <h2>Editar Empleado</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        <a href="{% url 'usuarios:registrar_empleado' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+
+{% endblock %}

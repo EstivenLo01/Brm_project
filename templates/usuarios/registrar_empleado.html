@@ -81,6 +81,7 @@
                 <th>Dirección</th>
                 <th>Campaña</th>
                 <th>Estado</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -94,6 +95,11 @@
                     <td>{{ empleado.direccion }}</td>
                     <td>{{ empleado.campana }}</td>
                     <td>{{ empleado.estado }}</td>
+                    <td>
+                        <a href="{% url 'usuarios:editar_empleado' empleado.id_empleado %}" class="btn btn-sm btn-warning">
+                            Editar
+                        </a>
+                    </td>
                 </tr>
             {% empty %}
                 <tr>

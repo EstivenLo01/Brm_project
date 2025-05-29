@@ -1,5 +1,4 @@
 {% extends "plantilla.html" %}
-
 {% block title %} <title>Registrar Campaña</title>{% endblock %}
 
 {% load static %}
@@ -42,6 +41,7 @@
             <tr>
                 <th>Nombre</th>
                 <th>Estado</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -49,6 +49,14 @@
             <tr>
                 <td>{{ campana.nombre_campana }}</td>
                 <td>{{ campana.estado }}</td>
+                <td>
+                    <a href="{% url 'usuarios:editar_campana' campana.id_campana %}" class="btn btn-warning btn-sm">Editar</a>
+                    {% if campana.estado.nombre == 'Habilitado' %}
+                        <a href="{% url 'usuarios:confirmar_deshabilitar_campana' campana.id_campana %}" class="btn btn-danger btn-sm">Deshabilitar</a>
+                    {% else %}
+                        <a href="{% url 'usuarios:confirmar_habilitar_campana' campana.id_campana %}" class="btn btn-success btn-sm">Habilitar</a>
+                    {% endif %}
+                </td>
             </tr>
             {% empty %}
             <tr>

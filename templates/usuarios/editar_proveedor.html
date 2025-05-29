@@ -1,0 +1,25 @@
+{% extends "plantilla.html" %}
+
+{% block title %}<title>Editar Proveedor</title>{% endblock %}
+
+{% block content %}
+{% include 'components/header.html' %}
+
+<div class="container mt-5">
+    <h2>Editar Proveedor</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.nombre_proveedor.label_tag }}
+            {{ form.nombre_proveedor }}
+        </div>
+        <div class="mb-3">
+            {{ form.estado.label_tag }}
+            {{ form.estado }}
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        <a href="{% url 'usuarios:registrar_proveedor' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+
+{% endblock %}

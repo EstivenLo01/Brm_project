@@ -119,6 +119,7 @@ class CampanaForm(forms.ModelForm):
     class Meta:
         model = Campana
         fields = ['nombre_campana', 'estado']
+        
 class ProveedorForm(forms.ModelForm):
     class Meta:
         model = Proveedor
