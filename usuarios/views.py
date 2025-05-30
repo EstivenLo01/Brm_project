@@ -93,9 +93,9 @@ def home(request):
             x3 = reverse('usuarios:registrar_acta_proveedor')
             x4 = reverse('usuarios:automatizar_actas')
             context = {
-                'icono_uno': 'fa-solid fa-folder-plus',
-                'nombre_uno': 'Registrar Acta Proveedor',
-                'icono_dos': 'fa-solid fa-folder-plus',
+                'nombre_uno': 'Registrar Proveedor',
+                'icono_uno': 'fa-solid fa-file-signature',
+                'icono_dos': 'fa-solid fa-laptop',
                 'nombre_dos': 'Registrar Acta Equipo',
                 'icono_tres': 'fa-solid fa-headset',
                 'nombre_tres': 'Registrar Acta Diadema', 
