@@ -1,70 +1,156 @@
 {% extends "plantilla.html" %}
 
-{% block title %} <title>Registrar Proveedor</title>{% endblock %}
+{% block title %}<title>Registrar Proveedor</title>{% endblock %}
 
 {% load static %}
 {% block content %}
 {% include 'components/header.html' %}
 
-<header class="page-header">
-    <div class="container">
-        <!-- <nav class="breadcrumb">
-            <span class="breadcrumb-item">Inicio</span>
-            <span class="breadcrumb-item">Equipos</span>
-            <span class="breadcrumb-item active">Registrar Acta</span>
-        </nav> -->
-        <h1><i class="fas fa-desktop"></i> Registrar Proveedor</h1>
-        <p>Sistema de Gestión de Equipos Informáticos</p>
-    </div>
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+  .card-style {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 30px;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  .form-group label {
+    font-weight: bold;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 10px;
+  }
+
+  .estado-activo {
+    color: green;
+    font-weight: bold;
+  }
+
+  .estado-inactivo {
+    color: red;
+    font-weight: bold;
+  }
+</style>
+
+<header class="page-header mb-4">
+  <div class="container">
+    <h1><i class="fa-solid fa-building"></i> Registrar Proveedor</h1>
+    <p>Sistema de Gestión de Equipos Informáticos</p>
+  </div>
 </header>
 
-<div class="container mt-5">
-    <form method="post">
-        {% csrf_token %}
-        <div class="mb-3">
-            {{ form.nombre_proveedor.label_tag }}
-            {{ form.nombre_proveedor }}
-        </div>
-        <div class="mb-3">
-            {{ form.estado.label_tag }}
-            {{ form.estado }}
-        </div>
-        <button type="submit" class="btn btn-success">Registrar</button>
+<main class="container">
+  <div class="card-style">
+    <form id="form-proveedor" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        {{ form.nombre_proveedor.label_tag }}
+        {{ form.nombre_proveedor }}
+      </div>
+      <div class="form-group">
+        {{ form.estado.label_tag }}
+        {{ form.estado }}
+      </div>
+
+      <div class="btn-group mt-3">
+        <button type="button" class="btn btn-success" onclick="validarYConfirmar()">Registrar</button>
+      </div>
     </form>
+  </div>
 
-    <hr>
+  <hr>
 
-    <form method="get" class="mb-3 d-flex" style="gap: 10px; max-width: 400px;">
-        <input type="text" name="buscar" placeholder="Buscar Proveedor..." value="{{ buscar }}" class="form-control" />
-        <button type="submit" class="btn btn-primary">Buscar</button>
-    </form>
+  <form method="get" class="mb-3 d-flex" style="gap: 10px; max-width: 400px;">
+    <input type="text" name="buscar" placeholder="Buscar Proveedor..." value="{{ buscar }}" class="form-control" />
+    <button type="submit" class="btn btn-primary">Buscar</button>
+  </form>
 
-    <h4>Proveedores Registrados</h4>
-    <table class="table table-bordered mt-3">
-        <thead>
-            <tr>
-                
-                <th>Nombre</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for proveedor in proveedores %}
-            <tr>
-                <td>{{ proveedor.nombre_proveedor }}</td>
-                <td>{{ proveedor.estado }}</td>
-                <td>
-                    <a href="{% url 'usuarios:editar_proveedor' proveedor.id_proveedor %}" class="btn btn-warning btn-sm">Editar</a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="3">No hay proveedores registrados</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+  <h4>Proveedores Registrados</h4>
+  <table class="table table-bordered mt-3">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for proveedor in proveedores %}
+      <tr>
+        <td>{{ proveedor.nombre_proveedor }}</td>
+        <td>
+          {% if proveedor.estado == "Activo" %}
+            <span class="estado-activo">Activo</span>
+          {% elif proveedor.estado == "Inactivo" %}
+            <span class="estado-inactivo">Inactivo</span>
+          {% else %}
+            {{ proveedor.estado }}
+          {% endif %}
+        </td>
+        <td>
+          <a href="{% url 'usuarios:editar_proveedor' proveedor.id_proveedor %}" class="btn btn-warning btn-sm">
+            Editar
+          </a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="3">No hay proveedores registrados</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</main>
+
+<script>
+  function validarYConfirmar() {
+    const form = document.getElementById('form-proveedor');
+    const nombre = form.querySelector('[name="nombre_proveedor"]').value.trim();
+    const estado = form.querySelector('[name="estado"]').value;
+
+    if (!nombre) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Campo requerido',
+        text: 'Por favor, ingresa el nombre del proveedor.'
+      });
+      return;
+    }
+
+    if (!estado) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Campo requerido',
+        text: 'Por favor, selecciona un estado.'
+      });
+      return;
+    }
+
+    Swal.fire({
+      title: '¿Registrar proveedor?',
+      text: 'Se agregará un nuevo proveedor al sistema.',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, registrar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        form.submit();
+      }
+    });
+  }
+</script>
 
 {% endblock %}
+

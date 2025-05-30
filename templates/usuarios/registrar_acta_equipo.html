@@ -208,7 +208,6 @@
                     <td>
                         <!-- Opcional: enlaces para editar o eliminar -->
                         <a href="{% url 'usuarios:editar_acta_equipo' acta.id_acta_equipo %}" class="btn btn-warning btn-sm">Editar</a>
-                        <a href="{url 'eliminar_acta_equipo' acta.id }" class="btn btn-sm btn-danger" onclick="return confirm('¿Está seguro de eliminar esta acta?')">Eliminar</a>
                     </td>
                 </tr>
                 {% empty %}

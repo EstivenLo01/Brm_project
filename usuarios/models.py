@@ -68,7 +68,7 @@ class Empleado(models.Model):
     
 
 class Proveedor(models.Model):
-    id_proveedor = models.CharField(max_length=20, primary_key=True)
+    id_proveedor = models.AutoField(primary_key=True)
     nombre_proveedor = models.CharField(max_length=100)
     estado = models.ForeignKey(Estado, on_delete=models.CASCADE)
 

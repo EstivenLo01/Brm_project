@@ -1,25 +1,134 @@
-{% extends "plantilla.html" %}
-
+{% extends 'plantilla.html' %}
 {% block title %}<title>Editar Campaña</title>{% endblock %}
 
+{% load static %}
 {% block content %}
 {% include 'components/header.html' %}
 
-<div class="container mt-5">
-    <h2>Editar Campaña</h2>
-    <form method="post">
-        {% csrf_token %}
-        <div class="mb-3">
-            {{ form.nombre_campana.label_tag }}
-            {{ form.nombre_campana }}
+<header class="page-header">
+    <div class="container">
+        <h1><i class="fa-solid fa-pen-to-square"></i> Editar Campaña</h1>
+    </div>
+</header>
+
+<main class="main-container-actas">
+    <div class="form-wrapper">
+        <div class="form-container">
+            <form id="form-editar-acta" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                {% endfor %}
+
+                <!-- Botón de guardar con confirmación -->
+                <button type="button" class="btn btn-primary" onclick="validarYConfirmar()">Guardar Cambios</button>
+
+                <!-- Botón de volver -->
+                <a href="{% url 'usuarios:registrar_campana' %}" class="btn btn-secondary ml-2">Volver</a>
+            </form>
         </div>
-        <div class="mb-3">
-            {{ form.estado.label_tag }}
-            {{ form.estado }}
-        </div>
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-        <a href="{% url 'usuarios:registrar_campana' %}" class="btn btn-secondary">Volver</a>
-    </form>
-</div>
+    </div>
+</main>
+
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // Guardamos los valores iniciales del formulario al cargar la página
+    let initialFormData = {};
+
+    window.addEventListener('load', () => {
+        const form = document.getElementById('form-editar-acta');
+        const elements = form.elements;
+        for (let i = 0; i < elements.length; i++) {
+            const el = elements[i];
+            if (el.name) {
+                if (el.type === 'checkbox' || el.type === 'radio') {
+                    initialFormData[el.name] = el.checked;
+                } else {
+                    initialFormData[el.name] = el.value;
+                }
+            }
+        }
+    });
+
+    function validarYConfirmar() {
+        const form = document.getElementById('form-editar-acta');
+        const nombre = form.querySelector('[name="nombre_campana"]').value.trim();
+        const estado = form.querySelector('[name="estado"]').value.trim();
+
+        // Validar campos obligatorios
+        if (!nombre) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campo requerido',
+                text: 'Por favor, ingresa el nombre de la campaña.'
+            });
+            return;
+        }
+
+        if (!estado) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campo requerido',
+                text: 'Por favor, selecciona un estado.'
+            });
+            return;
+        }
+
+        // Comparar valores actuales con los iniciales para detectar cambios
+        const elements = form.elements;
+        let hayCambios = false;
+
+        for (let i = 0; i < elements.length; i++) {
+            const el = elements[i];
+            if (!el.name) continue;
+
+            if (el.type === 'checkbox' || el.type === 'radio') {
+                if (initialFormData[el.name] !== el.checked) {
+                    hayCambios = true;
+                    break;
+                }
+            } else {
+                const initialVal = (initialFormData[el.name] ?? '').toString().trim();
+                const currentVal = (el.value ?? '').toString().trim();
+
+                if (initialVal !== currentVal) {
+                    hayCambios = true;
+                    break;
+                }
+            }
+        }
+
+        if (!hayCambios) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Sin cambios detectados',
+                text: 'No has modificado ningún campo.',
+                confirmButtonText: 'Entendido'
+            });
+            return;
+        }
+
+        // Confirmar antes de enviar formulario
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: 'Se guardarán los cambios realizados.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, guardar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    }
+</script>
 
 {% endblock %}

@@ -1,5 +1,5 @@
 {% extends "plantilla.html" %}
-{% block title %} <title>Registrar Campaña</title>{% endblock %}
+{% block title %}<title>Registrar Campaña</title>{% endblock %}
 
 {% load static %}
 {% block content %}
@@ -11,61 +11,105 @@
     </div>
 </header>
 
+<main class="main-container-actas">
+    <div class="form-wrapper">
+        <div class="form-container">
+            <form id="form-campana" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.nombre_campana.label_tag }}
+                    {{ form.nombre_campana }}
+                </div>
+                <div class="form-group mt-3">
+                    {{ form.estado.label_tag }}
+                    {{ form.estado }}
+                </div>
 
-
-<div class="container mt-5">
-    <h2>Registrar Campaña</h2>
-    <form method="post">
-        {% csrf_token %}
-        <div class="mb-3">
-            {{ form.nombre_campana.label_tag }}
-            {{ form.nombre_campana }}
+                <button type="button" class="btn btn-success mt-3" onclick="validarYConfirmar()">Registrar</button>
+            </form>
         </div>
-        <div class="mb-3">
-            {{ form.estado.label_tag }}
-            {{ form.estado }}
+
+        <!-- Búsqueda -->
+        <div class="mt-5 mb-4 px-3 py-3 bg-light rounded shadow-sm">
+            <form method="get" class="d-flex gap-2" style="max-width: 400px;">
+                <input type="text" name="buscar" placeholder="Buscar campaña..." value="{{ buscar }}"
+                    class="form-control" />
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </form>
         </div>
-        <button type="submit" class="btn btn-success">Registrar</button>
-    </form>
 
-    <hr>
+        <h4 class="mt-5 mb-4 px-3">Campañas Registradas</h4>
 
-    <form method="get" class="mb-3 d-flex" style="gap: 10px; max-width: 400px;">
-        <input type="text" name="buscar" placeholder="Buscar campaña..." value="{{ buscar }}" class="form-control" />
-        <button type="submit" class="btn btn-primary">Buscar</button>
-    </form>
+        <div class="table-responsive">
+            <table class="table table-bordered shadow-sm">
+                <thead class="table-light">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for campana in campanas %}
+                    <tr>
+                        <td>{{ campana.nombre_campana }}</td>
+                        <td>{{ campana.estado }}</td>
+                        <td>
+                            <a href="{% url 'usuarios:editar_campana' campana.id_campana %}"
+                                class="btn btn-warning btn-sm">Editar</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center">No hay campañas registradas</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
 
-    <h4>Campañas Registradas</h4>
-    <table class="table table-bordered mt-3">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for campana in campanas %}
-            <tr>
-                <td>{{ campana.nombre_campana }}</td>
-                <td>{{ campana.estado }}</td>
-                <td>
-                    <a href="{% url 'usuarios:editar_campana' campana.id_campana %}" class="btn btn-warning btn-sm">Editar</a>
-                    {% if campana.estado.nombre == 'Habilitado' %}
-                        <a href="{% url 'usuarios:confirmar_deshabilitar_campana' campana.id_campana %}" class="btn btn-danger btn-sm">Deshabilitar</a>
-                    {% else %}
-                        <a href="{% url 'usuarios:confirmar_habilitar_campana' campana.id_campana %}" class="btn btn-success btn-sm">Habilitar</a>
-                    {% endif %}
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="2">No hay campañas registradas</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Validación + Confirmación -->
+<script>
+    function validarYConfirmar() {
+        const nombre = document.querySelector('[name="nombre_campana"]').value.trim();
+        const estado = document.querySelector('[name="estado"]').value;
+
+        if (!nombre) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campo requerido',
+                text: 'Por favor, ingresa el nombre de la campaña.'
+            });
+            return;
+        }
+
+        if (!estado) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campo requerido',
+                text: 'Por favor, selecciona un estado.'
+            });
+            return;
+        }
+
+        Swal.fire({
+            title: '¿Registrar campaña?',
+            text: "Se añadirá una nueva campaña al sistema.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, registrar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('form-campana').submit();
+            }
+        });
+    }
+</script>
 
 {% endblock %}
-

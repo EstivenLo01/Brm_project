@@ -264,32 +264,7 @@ def editar_campana(request, id_campana):
 
     return render(request, 'usuarios/editar_campana.html', {'form': form})
 
-def confirmar_habilitar_campana(request, campana_id):
-    campana = get_object_or_404(Campana, id_campana=campana_id)
 
-    if request.method == 'POST':
-        habilitado = Estado.objects.get(nombre='Habilitado')
-        campana.estado = habilitado
-        campana.save()
-        render(request, 'usuarios/registrar_empleado.html')
-
-    return render(request, 'usuarios/confirmar_habilitar_campana.html', {
-        'campana': campana
-    })
-
-
-def confirmar_deshabilitar_campana(request, campana_id):
-    campana = get_object_or_404(Campana, id_campana=campana_id)
-
-    if request.method == 'POST':
-        deshabilitado = Estado.objects.get(nombre='Deshabilitado')
-        campana.estado = deshabilitado
-        campana.save()
-        render(request, 'usuarios/registrar_empleado.html')
-
-    return render(request, 'usuarios/confirmar_deshabilitar_campana.html', {
-        'campana': campana
-    })
 
 def registrar_empleado(request):
     usuario = request.session.get('NombreUsuario','NO')
@@ -476,19 +451,16 @@ def registrar_proveedor(request):
 
 def editar_proveedor(request, id_proveedor):
     proveedor = get_object_or_404(Proveedor, id_proveedor=id_proveedor)
-
+    
     if request.method == 'POST':
         form = ProveedorForm(request.POST, instance=proveedor)
         if form.is_valid():
             form.save()
-            render(request, 'usuarios/registrar_proveedor.html')
+            return redirect('usuarios:registrar_proveedor')  # Cambia por el nombre correcto
     else:
         form = ProveedorForm(instance=proveedor)
 
-    return render(request, 'usuarios/editar_proveedor.html', {
-        'form': form,
-        'proveedor': proveedor,
-    })
+    return render(request, 'usuarios/editar_proveedor.html', {'form': form})
 
 def registrar_acta_proveedor(request):
     usuario = request.session.get('NombreUsuario', 'NO')
