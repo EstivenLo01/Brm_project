@@ -548,10 +548,6 @@ def editar_acta_proveedor(request, id_acta):
     return render(request, 'usuarios/editar_acta_proveedor.html', {'form': form, 'acta': acta})
 
 
-    
-
-   
-
 def inicioSessionXperfil(request):
     return render(request, 'usuarios/inicioSessionXperfil.html')
 
