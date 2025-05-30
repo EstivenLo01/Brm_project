@@ -45,6 +45,7 @@
                     <th>Precio</th>
                     <th>Campaña</th>
                     <th>Observaciones</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -57,6 +58,11 @@
                     <td>${{ acta.precio_diadema }}</td>
                     <td>{{ acta.campana }}</td>
                     <td>{{ acta.observaciones|default:"-" }}</td>
+                    <td>
+                        <a href="{% url 'usuarios:editar_acta_diadema' acta.id_acta_diadema %}" class="btn btn-warning btn-sm">
+                             Editar
+                        </a>
+                    </td>
                 </tr>
                 {% empty %}
                 <tr>

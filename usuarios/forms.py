@@ -8,6 +8,7 @@ from .models import ActaDiadema
 from .models import ProveedorActa
 from .models import marca_diadema
 
+
 class RegistroUser(forms.ModelForm):
     class Meta:
         model = models.User
@@ -119,7 +120,7 @@ class CampanaForm(forms.ModelForm):
     class Meta:
         model = Campana
         fields = ['nombre_campana', 'estado']
-        
+
 class ProveedorForm(forms.ModelForm):
     class Meta:
         model = Proveedor

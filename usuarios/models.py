@@ -39,6 +39,8 @@ class User(models.Model):
     id_estado = models.ForeignKey(Estado, on_delete=models.CASCADE, default=1)
     def __str__(self):
         return self.name_user
+        
+
     
 class Campana(models.Model):
     id_campana = models.AutoField(primary_key=True)
@@ -150,7 +152,6 @@ class ProveedorActa(models.Model):
 
     observaciones = models.TextField(blank=True, null=True)
 
-    archivo_adjunto = models.FileField(upload_to='actas_proveedor/', blank=True, null=True)
 
     def __str__(self):
         return f"Acta #{self.numero_orden_instalacion} - {self.contacto}"

@@ -1,0 +1,14 @@
+{% extends 'plantilla.html' %}
+{% block title %}<title>Editar Acta Diadema</title>{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Editar Acta Diadema</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+        <a href="{% url 'usuarios:registrar_acta_diadema' %}" class="btn btn-secondary">Volver</a>
+    </form>
+</div>
+{% endblock %}

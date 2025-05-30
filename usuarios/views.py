@@ -26,6 +26,9 @@ from .models import ProveedorActa, Proveedor
 from .models import ActaDiadema
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Campana, Estado
+from .forms import ProveedorActaForm
+from .models import ActaEquipo
+from .forms import ActaEquipoForm
 
 
 def home(request):
@@ -195,6 +198,9 @@ def RegistroUser(request):
         'rol':rol
     }
     return render(request, 'usuarios/registroUser.html',context)
+
+
+
 
 def desactivar(request, idUser):
     usuario = request.session.get('NombreUsuario','NO')
@@ -372,6 +378,21 @@ def registrar_acta_equipo(request):
 
 
 
+def editar_acta_equipo(request, id_acta):
+    acta = get_object_or_404(ActaEquipo, pk=id_acta)
+
+    if request.method == 'POST':
+        form = ActaEquipoForm(request.POST, instance=acta)
+        if form.is_valid():
+            form.save()
+            return redirect('usuarios:registrar_acta_equipo')  # Ajusta si tienes otro nombre de vista
+    else:
+        form = ActaEquipoForm(instance=acta)
+
+    return render(request, 'usuarios/editar_acta_equipo.html', {'form': form, 'acta': acta})
+
+
+
 
 
 def registrar_acta_diadema(request):
@@ -406,6 +427,20 @@ def registrar_acta_diadema(request):
         'rol': rol,
     })
 
+
+
+def editar_acta_diadema(request, id_acta_diadema):
+    acta = get_object_or_404(ActaDiadema, id_acta_diadema=id_acta_diadema)
+    
+    if request.method == 'POST':
+        form = ActaDiademaForm(request.POST, request.FILES, instance=acta)
+        if form.is_valid():
+            form.save()
+            render(request, 'usuarios/registrar_acta_diadema.html')
+    else:
+        form = ActaDiademaForm(instance=acta)
+    
+    return render(request, 'usuarios/editar_acta_diadema.html', {'form': form})
 
 
 def registrar_proveedor(request):
@@ -496,6 +531,21 @@ def registrar_acta_proveedor(request):
 
     return render(request, 'usuarios/registrar_acta_proveedor.html', context)
 
+
+
+
+def editar_acta_proveedor(request, id_acta):
+    acta = get_object_or_404(ProveedorActa, pk=id_acta)
+
+    if request.method == 'POST':
+        form = ProveedorActaForm(request.POST, instance=acta)
+        if form.is_valid():
+            form.save()
+            render(request, 'usuarios/registrar_acta_proveedor.html')
+    else:
+        form = ProveedorActaForm(instance=acta)
+
+    return render(request, 'usuarios/editar_acta_proveedor.html', {'form': form, 'acta': acta})
 
 
     
