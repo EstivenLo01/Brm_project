@@ -92,7 +92,6 @@ class ActaDiadema(models.Model):
     precio_diadema = models.DecimalField(max_digits=10, decimal_places=2)
     campana = models.ForeignKey(Campana, on_delete=models.CASCADE)
     observaciones = models.TextField(blank=True, null=True)
-    archivo = models.FileField(upload_to='actas_diadema/', blank=True, null=True)
 
     def __str__(self):
         return f"ActaDiadema #{self.id_acta_diadema} - {self.empleado.nombres} ({self.empleado.cedula})"

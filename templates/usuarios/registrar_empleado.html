@@ -62,7 +62,7 @@
         </div>
 
         <!-- Botón Registrar -->
-        <button type="button" class="btn btn-success" onclick="confirmarRegistro()">Registrar</button>
+        <button type="button" class="btn btn-success" onclick="validarYRegistrar()">Registrar</button>
     </form>
 
     <!-- Búsqueda -->
@@ -130,14 +130,18 @@
 </div>
 {% endif %}
 
-<!-- SweetAlert2 CDN -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Estilo para campos inválidos -->
+<style>
+    .campo-invalido {
+        border: 2px solid red !important;
+        background-color: #ffe6e6 !important;
+    }
+</style>
 
 <script>
-    function confirmarRegistro() {
+    function validarYRegistrar() {
         const form = document.getElementById('form-registrar-empleado');
-        
-        // Campos a validar (todos obligatorios menos telefono_fijo)
+
         const camposObligatorios = [
             'cedula',
             'nombres',
@@ -149,33 +153,29 @@
             'estado'
         ];
 
-        for (let campo of camposObligatorios) {
-            const valor = form.querySelector(`[name="${campo}"]`).value.trim();
-            if (!valor) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Campo requerido',
-                    text: `Por favor ingresa el campo ${campo.charAt(0).toUpperCase() + campo.slice(1).replace('_', ' ')}.`,
-                    confirmButtonText: 'Entendido'
-                });
-                return;
-            }
-        }
+        let hayErrores = false;
 
-        // Confirmar antes de enviar
-        Swal.fire({
-            title: '¿Registrar empleado?',
-            text: "Se añadirá un nuevo empleado al sistema.",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Sí, registrar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                form.submit();
+        // Limpiar clases previas
+        camposObligatorios.forEach(campo => {
+            const input = form.querySelector(`[name="${campo}"]`);
+            input.classList.remove('campo-invalido');
+        });
+
+        // Validar campos
+        camposObligatorios.forEach(campo => {
+            const input = form.querySelector(`[name="${campo}"]`);
+            if (!input.value.trim()) {
+                input.classList.add('campo-invalido');
+                hayErrores = true;
             }
         });
+
+        // Enviar solo si no hay errores
+        if (!hayErrores) {
+            form.submit();
+        }
     }
 </script>
 
 {% endblock %}
+
