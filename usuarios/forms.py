@@ -264,11 +264,7 @@ class ActaDiademaForm(forms.ModelForm):
         label='Observaciones (opcional)'
     )
 
-    archivo = forms.FileField(
-        required=False,
-        widget=forms.ClearableFileInput(attrs={'class': 'form-control'}),
-        label='Adjuntar archivo'
-    )
+    
 
     class Meta:
         model = ActaDiadema
@@ -279,7 +275,7 @@ class ActaDiademaForm(forms.ModelForm):
             'precio_diadema',
             'campana',
             'observaciones',
-            'archivo',
+            
         ]
 
 

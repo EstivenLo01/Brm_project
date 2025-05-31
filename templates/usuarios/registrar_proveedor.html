@@ -6,9 +6,6 @@
 {% block content %}
 {% include 'components/header.html' %}
 
-<!-- SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <style>
   .card-style {
     background: white;
@@ -41,6 +38,18 @@
     color: red;
     font-weight: bold;
   }
+
+  .campo-invalido {
+    border: 2px solid red !important;
+    background-color: #ffe5e5;
+  }
+
+  #mensaje-error {
+    color: red;
+    font-weight: bold;
+    margin-top: 15px;
+    text-align: center;
+  }
 </style>
 
 <header class="page-header mb-4">
@@ -66,6 +75,7 @@
       <div class="btn-group mt-3">
         <button type="button" class="btn btn-success" onclick="validarYConfirmar()">Registrar</button>
       </div>
+      <div id="mensaje-error"></div>
     </form>
   </div>
 
@@ -116,40 +126,42 @@
 <script>
   function validarYConfirmar() {
     const form = document.getElementById('form-proveedor');
-    const nombre = form.querySelector('[name="nombre_proveedor"]').value.trim();
-    const estado = form.querySelector('[name="estado"]').value;
+    const nombreInput = form.querySelector('[name="nombre_proveedor"]');
+    const estadoInput = form.querySelector('[name="estado"]');
+    const mensajeError = document.getElementById('mensaje-error');
 
-    if (!nombre) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Campo requerido',
-        text: 'Por favor, ingresa el nombre del proveedor.'
-      });
+    let valido = true;
+    mensajeError.textContent = "";
+    nombreInput.classList.remove("campo-invalido");
+    estadoInput.classList.remove("campo-invalido");
+
+    if (!nombreInput.value.trim()) {
+      nombreInput.classList.add("campo-invalido");
+      valido = false;
+    }
+
+    if (!estadoInput.value.trim()) {
+      estadoInput.classList.add("campo-invalido");
+      valido = false;
+    }
+
+    if (!valido) {
+      
       return;
     }
 
-    if (!estado) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Campo requerido',
-        text: 'Por favor, selecciona un estado.'
-      });
-      return;
-    }
-
-    Swal.fire({
-      title: '¿Registrar proveedor?',
-      text: 'Se agregará un nuevo proveedor al sistema.',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, registrar',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        form.submit();
-      }
-    });
+    form.submit();
   }
+
+  // Limpiar error al escribir
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("#form-proveedor input, #form-proveedor select").forEach(element => {
+      element.addEventListener("input", () => {
+        element.classList.remove("campo-invalido");
+        document.getElementById('mensaje-error').textContent = "";
+      });
+    });
+  });
 </script>
 
 {% endblock %}

@@ -12,13 +12,26 @@
 </header>
 
 <style>
-  .card-style{
-    background:#fff;border-radius:15px;box-shadow:0 4px 12px rgba(0,0,0,.15);
-    max-width:800px;margin:20px auto;padding:30px
+  .card-style {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 30px
   }
-  .form-group{margin-bottom:15px}
-  .form-group label{font-weight:bold}
-  .no-change{border:2px solid #dc3545 !important}
+
+  .form-group {
+    margin-bottom: 15px
+  }
+
+  .form-group label {
+    font-weight: bold
+  }
+
+  .no-change {
+    border: 2px solid #dc3545 !important
+  }
 </style>
 
 <div class="container">
@@ -26,10 +39,10 @@
     <form id="form-editar" method="post">
       {% csrf_token %}
       {% for field in form %}
-        <div class="form-group">
-          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-          {{ field }}
-        </div>
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+      </div>
       {% endfor %}
 
       <div class="d-flex gap-2 mt-3">
@@ -46,38 +59,42 @@
     const form = document.getElementById('form-editar');
     const fd = new FormData(form);
     window.initialData = new Map();
-    for (const [k, v] of fd.entries()){window.initialData.set(k, (v || '').trim());}
+    for (const [k, v] of fd.entries()) { window.initialData.set(k, (v || '').trim()); }
 
     // Quitar borde rojo al editar
-    form.querySelectorAll('input, select, textarea').forEach(el=>{
-      el.addEventListener('input',()=>el.classList.remove('no-change'));
+    form.querySelectorAll('input, select, textarea').forEach(el => {
+      el.addEventListener('input', () => el.classList.remove('no-change'));
     });
   });
 
-  function confirmarGuardado(){
+  function confirmarGuardado() {
     const form = document.getElementById('form-editar');
     const fd = new FormData(form);
     let cambios = false;
 
     // quitar marcas anteriores
-    form.querySelectorAll('.no-change').forEach(el=>el.classList.remove('no-change'));
+    form.querySelectorAll('.no-change').forEach(el => el.classList.remove('no-change'));
 
     // validar obligatorios (todos excepto telefono_fijo)
-    for (const [k,v] of fd.entries()){
-      if(k==='telefono_fijo') continue;
-      if(!(v||'').trim()){
-        const campo=form.querySelector(`[name="${k}"]`);
-        if(campo){campo.classList.add('no-change');campo.focus();}
-        return; // falta obligatorio
+    for (const [k, v] of fd.entries()) {
+      const valorActual = (v || '').trim();
+      const valorInicial = (window.initialData.get(k) || '');
+
+      // Validar obligatorios (excepto telefono_fijo)
+      if (k !== 'telefono_fijo' && !valorActual) {
+        const campo = form.querySelector(`[name="${k}"]`);
+        if (campo) { campo.classList.add('no-change'); campo.focus(); }
+        return;
       }
-      // detectar cambios
-      if((v||'').trim()!== (window.initialData.get(k)||'')){cambios=true;}
+
+      // Detectar cambios (incluyendo telefono_fijo)
+      if (valorActual !== valorInicial) { cambios = true; }
     }
 
     // Si ningún campo cambió, resaltar todos
-    if(!cambios){
-      form.querySelectorAll('input, select, textarea').forEach(el=>el.classList.add('no-change'));
-      form.scrollIntoView({behavior:'smooth',block:'center'});
+    if (!cambios) {
+      form.querySelectorAll('input, select, textarea').forEach(el => el.classList.add('no-change'));
+      form.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
 

@@ -11,6 +11,12 @@
     </div>
 </header>
 
+<style>
+  .campo-invalido {
+    border: 2px solid #dc3545 !important;
+  }
+</style>
+
 <main class="main-container-actas">
     <div class="form-wrapper">
         <div class="form-container">
@@ -70,46 +76,44 @@
     </div>
 </main>
 
-<!-- SweetAlert2 CDN -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<!-- Validación + Confirmación -->
 <script>
     function validarYConfirmar() {
-        const nombre = document.querySelector('[name="nombre_campana"]').value.trim();
-        const estado = document.querySelector('[name="estado"]').value;
+        const form = document.getElementById('form-campana');
+        const nombre = form.querySelector('[name="nombre_campana"]');
+        const estado = form.querySelector('[name="estado"]');
 
-        if (!nombre) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Campo requerido',
-                text: 'Por favor, ingresa el nombre de la campaña.'
-            });
-            return;
+        // Limpiar bordes anteriores
+        nombre.classList.remove('campo-invalido');
+        estado.classList.remove('campo-invalido');
+
+        let valido = true;
+
+        if (!nombre.value.trim()) {
+            nombre.classList.add('campo-invalido');
+            nombre.focus();
+            valido = false;
         }
 
-        if (!estado) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Campo requerido',
-                text: 'Por favor, selecciona un estado.'
-            });
-            return;
+        if (!estado.value.trim()) {
+            estado.classList.add('campo-invalido');
+            if (valido) estado.focus();
+            valido = false;
         }
 
-        Swal.fire({
-            title: '¿Registrar campaña?',
-            text: "Se añadirá una nueva campaña al sistema.",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Sí, registrar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('form-campana').submit();
-            }
-        });
+        if (valido) {
+            form.submit();
+        }
     }
+
+    // Eliminar borde rojo al empezar a escribir
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelector('[name="nombre_campana"]').addEventListener("input", e => {
+            e.target.classList.remove("campo-invalido");
+        });
+        document.querySelector('[name="estado"]').addEventListener("input", e => {
+            e.target.classList.remove("campo-invalido");
+        });
+    });
 </script>
 
 {% endblock %}

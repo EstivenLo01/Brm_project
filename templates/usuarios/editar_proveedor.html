@@ -6,9 +6,6 @@
 {% block content %}
 {% include 'components/header.html' %}
 
-<!-- SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <style>
   .card-style {
     background: white;
@@ -30,6 +27,18 @@
   .btn-group {
     display: flex;
     gap: 10px;
+  }
+
+  .campo-invalido {
+    border: 2px solid red !important;
+    background-color: #ffe5e5;
+  }
+
+  #mensaje-error {
+    color: red;
+    font-weight: bold;
+    margin-top: 15px;
+    text-align: center;
   }
 </style>
 
@@ -56,76 +65,73 @@
         <button type="button" class="btn btn-primary" onclick="validarYConfirmarEdicion()">Guardar Cambios</button>
         <a href="{% url 'usuarios:registrar_proveedor' %}" class="btn btn-secondary">Volver</a>
       </div>
+      <div id="mensaje-error"></div>
     </form>
   </div>
 </main>
 
 <script>
-  // Guardar los valores originales al cargar
+  let initialData = new Map();
+
   document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById('form-editar-proveedor');
     const formData = new FormData(form);
-    window.initialData = new Map();
     for (let pair of formData.entries()) {
-      window.initialData.set(pair[0], pair[1]);
+      initialData.set(pair[0], pair[1]);
     }
+
+    // Quitar bordes rojos al escribir
+    form.querySelectorAll('input, select').forEach(el => {
+      el.addEventListener('input', () => el.classList.remove('campo-invalido'));
+    });
   });
 
   function validarYConfirmarEdicion() {
     const form = document.getElementById('form-editar-proveedor');
-    const nombre = form.querySelector('[name="nombre_proveedor"]').value.trim();
-    const estado = form.querySelector('[name="estado"]').value;
+    const nombre = form.querySelector('[name="nombre_proveedor"]');
+    const estado = form.querySelector('[name="estado"]');
+    const mensajeError = document.getElementById("mensaje-error");
 
-    if (!nombre) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Campo requerido',
-        text: 'Por favor, ingresa el nombre del proveedor.'
-      });
+    // Reset estilos
+    nombre.classList.remove("campo-invalido");
+    estado.classList.remove("campo-invalido");
+    mensajeError.textContent = "";
+
+    let valido = true;
+
+    if (!nombre.value.trim()) {
+      nombre.classList.add("campo-invalido");
+      valido = false;
+    }
+
+    if (!estado.value.trim()) {
+      estado.classList.add("campo-invalido");
+      valido = false;
+    }
+
+    if (!valido) {
+      
       return;
     }
 
-    if (!estado) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Campo requerido',
-        text: 'Por favor, selecciona un estado.'
-      });
-      return;
-    }
-
-    // Verificar si hubo cambios
+    // Verificar cambios
     const currentData = new FormData(form);
     let hasChanges = false;
     for (let [key, value] of currentData.entries()) {
-      if (window.initialData.get(key) !== value) {
+      if (initialData.get(key) !== value) {
         hasChanges = true;
         break;
       }
     }
 
     if (!hasChanges) {
-      Swal.fire({
-        icon: 'info',
-        title: 'Sin cambios detectados',
-        text: 'No has modificado ningún campo.',
-        confirmButtonText: 'Entendido'
-      });
+      
+      nombre.classList.add("campo-invalido");
+      estado.classList.add("campo-invalido");
       return;
     }
 
-    Swal.fire({
-      title: '¿Guardar cambios?',
-      text: 'Se actualizará la información del proveedor.',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, guardar',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        form.submit();
-      }
-    });
+    form.submit();
   }
 </script>
 

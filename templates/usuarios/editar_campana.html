@@ -11,6 +11,12 @@
     </div>
 </header>
 
+<style>
+  .no-change {
+    border: 2px solid #dc3545 !important;
+  }
+</style>
+
 <main class="main-container-actas">
     <div class="form-wrapper">
         <div class="form-container">
@@ -23,7 +29,7 @@
                     </div>
                 {% endfor %}
 
-                <!-- Botón de guardar con confirmación -->
+                <!-- Botón de guardar -->
                 <button type="button" class="btn btn-primary" onclick="validarYConfirmar()">Guardar Cambios</button>
 
                 <!-- Botón de volver -->
@@ -33,102 +39,87 @@
     </div>
 </main>
 
-<!-- SweetAlert2 CDN -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script>
-    // Guardamos los valores iniciales del formulario al cargar la página
-    let initialFormData = {};
+  let initialFormData = {};
 
-    window.addEventListener('load', () => {
-        const form = document.getElementById('form-editar-acta');
-        const elements = form.elements;
-        for (let i = 0; i < elements.length; i++) {
-            const el = elements[i];
-            if (el.name) {
-                if (el.type === 'checkbox' || el.type === 'radio') {
-                    initialFormData[el.name] = el.checked;
-                } else {
-                    initialFormData[el.name] = el.value;
-                }
-            }
-        }
-    });
-
-    function validarYConfirmar() {
-        const form = document.getElementById('form-editar-acta');
-        const nombre = form.querySelector('[name="nombre_campana"]').value.trim();
-        const estado = form.querySelector('[name="estado"]').value.trim();
-
-        // Validar campos obligatorios
-        if (!nombre) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Campo requerido',
-                text: 'Por favor, ingresa el nombre de la campaña.'
-            });
-            return;
+  window.addEventListener('load', () => {
+    const form = document.getElementById('form-editar-acta');
+    const elements = form.elements;
+    for (let i = 0; i < elements.length; i++) {
+      const el = elements[i];
+      if (el.name) {
+        if (el.type === 'checkbox' || el.type === 'radio') {
+          initialFormData[el.name] = el.checked;
+        } else {
+          initialFormData[el.name] = el.value.trim();
         }
 
-        if (!estado) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Campo requerido',
-                text: 'Por favor, selecciona un estado.'
-            });
-            return;
-        }
-
-        // Comparar valores actuales con los iniciales para detectar cambios
-        const elements = form.elements;
-        let hayCambios = false;
-
-        for (let i = 0; i < elements.length; i++) {
-            const el = elements[i];
-            if (!el.name) continue;
-
-            if (el.type === 'checkbox' || el.type === 'radio') {
-                if (initialFormData[el.name] !== el.checked) {
-                    hayCambios = true;
-                    break;
-                }
-            } else {
-                const initialVal = (initialFormData[el.name] ?? '').toString().trim();
-                const currentVal = (el.value ?? '').toString().trim();
-
-                if (initialVal !== currentVal) {
-                    hayCambios = true;
-                    break;
-                }
-            }
-        }
-
-        if (!hayCambios) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Sin cambios detectados',
-                text: 'No has modificado ningún campo.',
-                confirmButtonText: 'Entendido'
-            });
-            return;
-        }
-
-        // Confirmar antes de enviar formulario
-        Swal.fire({
-            title: '¿Estás seguro?',
-            text: 'Se guardarán los cambios realizados.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, guardar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                form.submit();
-            }
-        });
+        // Eliminar borde rojo al editar
+        el.addEventListener('input', () => el.classList.remove('no-change'));
+      }
     }
+  });
+
+  function validarYConfirmar() {
+    const form = document.getElementById('form-editar-acta');
+    const elements = form.elements;
+
+    let camposValidos = true;
+    let cambios = false;
+
+    // Quitar marcas anteriores
+    for (let i = 0; i < elements.length; i++) {
+      elements[i].classList.remove('no-change');
+    }
+
+    // Validar obligatorios
+    const nombre = form.querySelector('[name="nombre_campana"]');
+    const estado = form.querySelector('[name="estado"]');
+
+    if (!nombre.value.trim()) {
+      nombre.classList.add('no-change');
+      nombre.focus();
+      camposValidos = false;
+    }
+
+    if (!estado.value.trim()) {
+      estado.classList.add('no-change');
+      if (camposValidos) estado.focus();
+      camposValidos = false;
+    }
+
+    if (!camposValidos) return;
+
+    // Verificar cambios respecto a los valores iniciales
+    for (let i = 0; i < elements.length; i++) {
+      const el = elements[i];
+      if (!el.name) continue;
+
+      const actual = (el.type === 'checkbox' || el.type === 'radio') ? el.checked : el.value.trim();
+      const inicial = initialFormData[el.name];
+
+      if (actual !== inicial) {
+        cambios = true;
+        break;
+      }
+    }
+
+    // Si no hay cambios, marcar todo en rojo
+    if (!cambios) {
+      for (let i = 0; i < elements.length; i++) {
+        const el = elements[i];
+        if (el.name && el.type !== 'hidden') {
+          el.classList.add('no-change');
+        }
+      }
+      form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    // Enviar si todo está bien
+    form.submit();
+  }
 </script>
 
 {% endblock %}
+
