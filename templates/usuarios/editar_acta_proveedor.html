@@ -13,7 +13,7 @@
 <main class="main-container-actas">
     <div class="form-wrapper">
         <div class="form-container">
-            <form method="post" novalidate>
+            <form id="form-editar-acta-proveedor" method="post" novalidate>
                 {% csrf_token %}
                 {% for field in form %}
                     <div class="form-group mb-3">
@@ -32,4 +32,59 @@
         </div>
     </div>
 </main>
+
+<script>
+  const form = document.getElementById('form-editar-acta-proveedor');
+
+  // Guardar los valores originales cuando carga el DOM
+  const valoresOriginales = {};
+  form.querySelectorAll('input, select, textarea').forEach(field => {
+    if (field.name) {
+      valoresOriginales[field.name] = field.value.trim();
+    }
+  });
+
+  form.addEventListener('submit', function (event) {
+    let seModifico = false;
+    let camposValidos = true;
+
+    // Limpiar bordes anteriores
+    form.querySelectorAll('input, select, textarea').forEach(field => {
+      field.style.border = '';
+    });
+
+    // Revisar si hubo modificación y validar vacíos
+    form.querySelectorAll('input, select, textarea').forEach(field => {
+      if (!field.name) return;
+
+      const valorOriginal = valoresOriginales[field.name];
+      const valorActual = field.value.trim();
+
+      if (valorActual !== valorOriginal) {
+        seModifico = true;
+
+        if (valorActual === '') {
+          field.style.border = '2px solid red';
+          camposValidos = false;
+        }
+      }
+    });
+
+    // Si no se modificó nada, marcar todos en rojo
+    if (!seModifico) {
+      form.querySelectorAll('input, select, textarea').forEach(field => {
+        if (field.name) {
+          field.style.border = '2px solid red';
+        }
+      });
+      camposValidos = false;
+    }
+
+    // Cancelar envío si hay errores
+    if (!camposValidos) {
+      event.preventDefault();
+    }
+  });
+</script>
+
 {% endblock %}

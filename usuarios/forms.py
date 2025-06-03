@@ -366,11 +366,6 @@ class ProveedorActaForm(forms.ModelForm):
         label='Observaciones'
     )
 
-    archivo_adjunto = forms.FileField(
-    required=False,
-    widget=forms.ClearableFileInput(attrs={'class': 'form-control'}),
-    label='Adjuntar archivo'
-    )
 
     class Meta:
         model = ProveedorActa

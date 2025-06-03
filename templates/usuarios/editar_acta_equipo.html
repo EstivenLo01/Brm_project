@@ -1,4 +1,4 @@
-{% extends 'plantilla.html' %}
+{% extends 'plantilla.html' %} 
 {% block title %}<title>Editar Acta de Equipo</title>{% endblock %}
 
 {% block content %}
@@ -13,7 +13,7 @@
 <main class="main-container-actas">
     <div class="form-wrapper">
         <div class="form-container">
-            <form method="post" novalidate>
+            <form id="form-editar-acta-equipo" method="post" novalidate>
                 {% csrf_token %}
                 {% for field in form %}
                     <div class="form-group mb-3">
@@ -25,9 +25,62 @@
                     </div>
                 {% endfor %}
                 <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                <a href="{% url 'usuarios:registrar_acta_equipo' %}" class="btn btn-secondary">Cancelar</a>
+                <a href="{% url 'usuarios:registrar_acta_equipo' %}" class="btn btn-secondary">Volver</a>
             </form>
         </div>
     </div>
 </main>
+
+<script>
+  const form = document.getElementById('form-editar-acta-equipo');
+
+  // Guardar los valores originales al cargar
+  const valoresOriginales = {};
+  form.querySelectorAll('input, select, textarea').forEach(field => {
+    if (field.name) {
+      valoresOriginales[field.name] = field.value.trim();
+    }
+  });
+
+  form.addEventListener('submit', function (event) {
+    let seModifico = false;
+    let camposValidos = true;
+
+    // Limpiar bordes previos
+    form.querySelectorAll('input, select, textarea').forEach(field => {
+      field.style.border = '';
+    });
+
+    form.querySelectorAll('input, select, textarea').forEach(field => {
+      if (!field.name) return;
+
+      const valorOriginal = valoresOriginales[field.name];
+      const valorActual = field.value.trim();
+
+      if (valorActual !== valorOriginal) {
+        seModifico = true;
+
+        if (valorActual === '') {
+          field.style.border = '2px solid red';
+          camposValidos = false;
+        }
+      }
+    });
+
+    if (!seModifico) {
+      form.querySelectorAll('input, select, textarea').forEach(field => {
+        if (field.name) {
+          field.style.border = '2px solid red';
+        }
+      });
+      camposValidos = false;
+    }
+
+    if (!camposValidos) {
+      event.preventDefault();
+    }
+  });
+</script>
+
 {% endblock %}
+
